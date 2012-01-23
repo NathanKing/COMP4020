@@ -11,6 +11,6 @@ public class A1Activity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
-        this.startActivity(new Intent(this, Experiment.class));
+        //this.startActivity(new Intent(this, Experiment.class));
     }
 }
