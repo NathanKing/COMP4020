@@ -12,9 +12,12 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Environment;
 import android.provider.Settings.System;
+import android.util.Log;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.WindowManager;
 
 
 public class MyCanvas extends View implements OnTouchListener
@@ -41,6 +44,10 @@ public class MyCanvas extends View implements OnTouchListener
 	String data;
 	int maxTrials;
 	int currTrial;
+	
+	Display display;
+	int screenWidth;
+	int screenHeight;
 	
 	/*
 	 * Constructor
@@ -93,8 +100,8 @@ public class MyCanvas extends View implements OnTouchListener
 					startVisible = false;
 					
 					// randomly place target and show
-	    			rectLocX = randNumGen(1024-rectWidth);
-	    			rectLocY = randNumGen(600-50-rectHeight);
+	    			rectLocX = randNumGen(screenWidth-rectWidth);
+	    			rectLocY = randNumGen(screenHeight-50-rectHeight);
 	    			targetVisible = true;
 	    			
 	    		}//end if (START_TOUCHED)
@@ -174,8 +181,14 @@ public class MyCanvas extends View implements OnTouchListener
 		
 		//Experiment Var
 		data = "";
-		maxTrials = 30;
+		maxTrials = 5;
 		currTrial = 0;
+		
+		display = ((WindowManager)this.getContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+		screenWidth = display.getWidth();
+		screenHeight = display.getHeight();
+		
+		
 		
 	}//end setup
     
@@ -197,7 +210,7 @@ public class MyCanvas extends View implements OnTouchListener
 	 */
     private void recordTrial(int x, int y, long touchTime)
     {
-    	data += touchTime + " x=" + x + " y=" + y + "\n";
+    	data += touchTime + " x=" + x + " y=" + y + " ";
     	
     }//end recordTrial
     
@@ -208,20 +221,25 @@ public class MyCanvas extends View implements OnTouchListener
 	 */
 	private void saveToFile(String dataToSave)
 	{
-	
-		File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),"touchNmoveNsave.txt");
+		File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "results.txt");
 
 		try {
-		     FileOutputStream os = new FileOutputStream(file, false); 
-		     OutputStreamWriter out = new OutputStreamWriter(os);
-		     out.write(dataToSave);
-		     out.close();    
-		}//end try
-		catch(Exception e)
-		{
-			//error creating, opening, writing or closing file
-		}//end catch		
-		 
+
+	        FileOutputStream os = new FileOutputStream(file); 
+	        OutputStreamWriter out = new OutputStreamWriter(os);
+	        
+	        //if(Environment.)
+
+	        out.write(dataToSave);
+	        out.close();
+	     
+
+	    } catch (Exception e) {
+	        // Unable to create file, likely because external storage is
+	        // not currently mounted.
+	        Log.w("ExternalStorage", "Error writing " + file, e);
+	    }
+
 	}//end saveToFile
 
 }
