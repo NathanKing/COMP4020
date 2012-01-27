@@ -14,16 +14,7 @@ public class canvasApp extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        
-        try {
-			canvasView = new MyCanvas(this);
-		} catch (RowsExceededException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (WriteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		canvasView = new MyCanvas(this);		
         setContentView(canvasView);
         canvasView.requestFocus();
     }

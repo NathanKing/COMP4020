@@ -57,18 +57,15 @@ public class MyCanvas extends View implements OnTouchListener
 	int screenWidth;
 	int screenHeight;
 	
-	Workbook workbook;
-	WritableWorkbook copy;
+
 	File file;
 
-	WritableSheet currentSheet;
-	ArrayList datalist;
 	/*
 	 * Constructor
 	 * 
 	 * Discrip:
 	 */
-	public MyCanvas(Context context) throws RowsExceededException, WriteException
+	public MyCanvas(Context context)
 	{
 		super(context);
         setFocusable(true);
@@ -133,7 +130,7 @@ public class MyCanvas extends View implements OnTouchListener
 					recordTrial((int)event.getX(), (int)event.getY(), event.getEventTime());
 
     				currTrial++;
-    				if(currTrial % 5 == 0){
+    				if(currTrial % 10 == 0){
     					rectWidth += 25;
     					rectHeight += 25;
     					startWidth += 25;
@@ -186,7 +183,7 @@ public class MyCanvas extends View implements OnTouchListener
 	 * 
 	 * Discrip:
 	 */
-	private void setup() throws RowsExceededException, WriteException
+	private void setup()
 	{
 		//Rectangle (TARGET)
 		rectLocX = 0;
@@ -213,16 +210,14 @@ public class MyCanvas extends View implements OnTouchListener
 		startVisible = true;
 		
 		//Experiment Var
-		data = "";
-		maxTrials = 30;
+		data = "'Time'," +  "'X'," + "'Y'," + "'Square Size'," + "'Finger'\n";
+		maxTrials = 60;
 		currTrial = 0;
 		
 		display = ((WindowManager)this.getContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 		screenWidth = display.getWidth();
 		screenHeight = display.getHeight();
 		
-		datalist = new ArrayList<Data>();
-
 	}//end setup
     
 	/*
@@ -257,13 +252,8 @@ public class MyCanvas extends View implements OnTouchListener
     	if(currTrial >= (maxTrials / 2)){
     		finger = 1;
     	}
-    	Data newData = new Data(touchTime, x, y, type, finger);
-    	datalist.add(newData);
-    	//currentSheet.addCell(new Number(currentCol, currentRow, touchTime));
-    	//currentSheet.addCell(new Number(currentCol+1, currentRow, x));
-    	//currentSheet.addCell(new Number(currentCol+2, currentRow, y));
-    	//currentRow++;
-    	data += touchTime + " x=" + x + " y=" + y + "\n";
+    	
+    	data += touchTime + "," + x + "," + y + "," + type +"," + finger +"\n"; 
     	
     }//end recordTrial
     
@@ -272,109 +262,24 @@ public class MyCanvas extends View implements OnTouchListener
 	 * 
 	 * Discrip:
 	 */
-	private void saveToFile() throws RowsExceededException, WriteException
+	private void saveToFile()
 	{
 		
 		try {
-			file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "results.xls");
-			workbook = Workbook.getWorkbook(file);
+			file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "results.txt");
+			FileOutputStream os = new FileOutputStream(file, true); 
+		     OutputStreamWriter out = new OutputStreamWriter(os);
+		     out.write(data);
+		     out.close();
 			
-			copy = Workbook.createWorkbook(file, workbook);
-
-			currentSheet = copy.getSheet("index");
-
 		} catch (Exception e) {
 			
-			try {
-				copy = Workbook.createWorkbook(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "results.xls"));
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-
-			currentSheet = copy.createSheet("index", 0);
-			
-			//currentSheet.addCell(new Label(0, 0, "Time Index1"));
-			//currentSheet.addCell(new Label(1, 0, "X Index1"));
-			//currentSheet.addCell(new Label(2, 0, "Y Index1"));
-			
-			//currentSheet.addCell(new Label(3, 0, "Time Index2"));
-			//currentSheet.addCell(new Label(4, 0, "X Index2"));
-			//currentSheet.addCell(new Label(5, 0, "Y Index2"));
-			
-			//currentSheet.addCell(new Label(6, 0, "Time Index3"));
-			//currentSheet.addCell(new Label(7, 0, "X Index3"));
-			//currentSheet.addCell(new Label(8, 0, "Y Index3"));
-			
-			//currentSheet = copy.createSheet("thumb", 1);
-						
-			//currentSheet.addCell(new Label(0, 0, "Time Thumb1"));
-			//currentSheet.addCell(new Label(1, 0, "X Thumb1"));
-			//currentSheet.addCell(new Label(2, 0, "Y Thumb1"));
-			
-			//currentSheet.addCell(new Label(3, 0, "Time Thumb2"));
-			//currentSheet.addCell(new Label(4, 0, "X Thumb2"));
-			//currentSheet.addCell(new Label(5, 0, "Y Thumb2"));
-			
-			//currentSheet.addCell(new Label(6, 0, "Time Thumb3"));
-			//currentSheet.addCell(new Label(7, 0, "X Thumb3"));
-			//currentSheet.addCell(new Label(8, 0, "Y Thumb3"));
-			
-			//currentSheet = copy.getSheet("index");
-		}
-		
-		long time;
-		int x, y, type, finger;
-		Data data;
-		int row;
-		
-		currentSheet = copy.createSheet(copy.getNumberOfSheets()+ "", copy.getNumberOfSheets());
-
-		
-		for(int i = 0; i < datalist.size(); i++){
-			
-			data = (Data)datalist.get(i);
-			time = data.time;
-			x = data.x;
-			y = data.y;
-			type = data.type;
-			finger = data.finger;
-			
-			row = currentSheet.getRows();
-			currentSheet.addCell(new Number(0, row, time));
-			currentSheet.addCell(new Number(1, row, x));
-			currentSheet.addCell(new Number(2, row, y));
-			currentSheet.addCell(new Number(3, row, type));
-			currentSheet.addCell(new Number(4, row, finger));
-			
-			
-			Log.w("results", time + " " + x + " " + y + " " + type + " " + finger +"\n");
-		}
-		
-		try {
-			copy.write();
-			copy.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		
 
 
 	}//end saveToFile
 	
-	private class Data{
-	
-		long time;
-		int x, y, type, finger;
-		
-		public Data(long time, int x, int y, int type, int finger){
-			
-			this.time=time;
-			this.x=x;
-			this.y=y;
-			this.type = type;
-			this.finger = finger;
-		}
-	}
-
 }
