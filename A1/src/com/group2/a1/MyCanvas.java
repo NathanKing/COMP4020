@@ -44,7 +44,7 @@ public class MyCanvas extends View implements OnTouchListener
 	int startLocY;
 	int startWidth;
 	int startHeight;
-	
+	int random;
 	Paint paintStart;
 	boolean startVisible;
 	
@@ -57,8 +57,15 @@ public class MyCanvas extends View implements OnTouchListener
 	int screenWidth;
 	int screenHeight;
 	
-
+	int size;
+	long timeStart;
+	long timeEnd;
+	long timeTotal;
 	File file;
+	int difficulty;
+	boolean stop;
+	
+	int SS, SM, SL, MS, MM, ML, LS, LM, LL;
 
 	/*
 	 * Constructor
@@ -109,11 +116,167 @@ public class MyCanvas extends View implements OnTouchListener
 	    			&& (event.getY() > startLocY) && (event.getY() < startLocY+startHeight))
 	    		{
 					startVisible = false;
-					
+					timeStart = event.getEventTime();
 					// randomly place target and show
-	    			rectLocX = randNumGen(screenWidth-rectWidth);
-	    			rectLocY = randNumGen(screenHeight-50-rectHeight);
+					
 	    			targetVisible = true;
+					stop = false;
+	    			while(stop == false){
+	    			
+	    				random = (int) (Math.random()*9);
+				
+	    				Log.w("test", Integer.toString(random));
+					
+						switch(random){
+						
+						case 0:
+							
+							if(SS < 10){
+								size = 0;
+								stop = true;
+								SS++;
+								currTrial++;
+								rectWidth = 75;
+								rectHeight = 75;
+								//Log.w("test", "SS");
+								
+								while(Math.sqrt(Math.pow(rectLocX, 2)+Math.pow(rectLocY, 2)) > 400){	
+									rectLocX = randNumGen(screenWidth-rectWidth-50);
+									rectLocY = randNumGen(screenHeight-rectHeight-50);
+								}
+							}
+							break;
+							
+						case 1:
+							if(SM < 10){
+								size = 1;
+								stop = true;
+								SM++;
+								currTrial++;
+								rectWidth = 75;
+								rectHeight = 75;
+								while(Math.sqrt(Math.pow(rectLocX, 2)+Math.pow(rectLocY, 2)) < 400 ||
+										Math.sqrt(Math.pow(rectLocX, 2)+Math.pow(rectLocY, 2)) > 800){	
+									rectLocX = randNumGen(screenWidth-rectWidth-50);
+									rectLocY = randNumGen(screenHeight-rectHeight-50);
+								}
+							}
+							break;
+							
+						case 2:
+							if(SL < 10){
+								size = 2;
+								stop = true;
+								SL++;
+								currTrial++;
+								rectWidth = 75;
+								rectHeight = 75;
+								while(Math.sqrt(Math.pow(rectLocX, 2)+Math.pow(rectLocY, 2)) < 800){
+									rectLocX = randNumGen(screenWidth-rectWidth-50);
+									rectLocY = randNumGen(screenHeight-rectHeight-50);
+								}
+							}
+							
+							break;
+							
+						case 3:
+							if(MS < 10){
+								size = 3;
+								stop = true;
+								MS++;
+								currTrial++;
+								rectWidth = 100;
+								rectHeight = 100;
+								while(Math.sqrt(Math.pow(rectLocX, 2)+Math.pow(rectLocY, 2)) > 400){	
+									rectLocX = randNumGen(screenWidth-rectWidth-50);
+									rectLocY = randNumGen(screenHeight-rectHeight-50);
+								}
+							}
+							
+							break;
+							
+						case 4:
+							if(MM < 10){
+								size = 4;
+								stop = true;
+								MM++;
+								currTrial++;
+								rectWidth = 100;
+								rectHeight = 100;
+								while(Math.sqrt(Math.pow(rectLocX, 2)+Math.pow(rectLocY, 2)) < 400 ||
+										Math.sqrt(Math.pow(rectLocX, 2)+Math.pow(rectLocY, 2)) > 800){	
+									rectLocX = randNumGen(screenWidth-rectWidth-50);
+									rectLocY = randNumGen(screenHeight-rectHeight-50);
+								}
+							}
+							
+							break;
+							
+						case 5:
+							if(ML < 10){
+								size = 5;
+								stop = true;
+								ML++;
+								currTrial++;
+								rectWidth = 100;
+								rectHeight = 100;
+								while(Math.sqrt(Math.pow(rectLocX, 2)+Math.pow(rectLocY, 2)) < 800){
+									rectLocX = randNumGen(screenWidth-rectWidth-50);
+									rectLocY = randNumGen(screenHeight-rectHeight-50);
+								}
+							}
+							
+							break;
+						case 6:
+							if(LS < 10){
+								size = 6;
+								stop = true;
+								LS++;
+								currTrial++;
+								rectWidth = 125;
+								rectHeight = 125;
+								while(Math.sqrt(Math.pow(rectLocX, 2)+Math.pow(rectLocY, 2)) > 400){	
+									rectLocX = randNumGen(screenWidth-rectWidth-50);
+									rectLocY = randNumGen(screenHeight-rectHeight-50);
+								}
+							}
+							
+							break;
+						case 7:
+							if(LM < 10){
+								size = 7;
+								stop = true;
+								LM++;
+								currTrial++;
+								rectWidth = 125;
+								rectHeight = 125;
+								while(Math.sqrt(Math.pow(rectLocX, 2)+Math.pow(rectLocY, 2)) < 400 ||
+										Math.sqrt(Math.pow(rectLocX, 2)+Math.pow(rectLocY, 2)) > 800){	
+									rectLocX = randNumGen(screenWidth-rectWidth-50);
+									rectLocY = randNumGen(screenHeight-rectHeight-50);
+								}
+							}
+							
+							break;
+						case 8:
+							if(LL < 10){
+								size = 9;
+								stop = true;
+								LL++;
+								currTrial++;
+								rectWidth = 125;
+								rectHeight = 125;
+								while(Math.sqrt(Math.pow(rectLocX, 2)+Math.pow(rectLocY, 2)) < 800){
+									rectLocX = randNumGen(screenWidth-rectWidth-50);
+									rectLocY = randNumGen(screenHeight-rectHeight-50);
+								}
+							}
+						
+							break;
+						}
+				
+				}
+					
 	    			
 	    		}//end if (START_TOUCHED)
 				
@@ -126,24 +289,11 @@ public class MyCanvas extends View implements OnTouchListener
 	    			&& (event.getY() > rectLocY) && (event.getY() < rectLocY+rectHeight))
 	    		{
     				// record curr trial info
-
-					recordTrial((int)event.getX(), (int)event.getY(), event.getEventTime());
-
-    				currTrial++;
-    				if(currTrial % 10 == 0){
-    					rectWidth += 25;
-    					rectHeight += 25;
-    					startWidth += 25;
-    					startHeight += 25;
-    				}
-    				
-    				if(currTrial == maxTrials / 2){
-    					rectWidth = 75;
-    					rectHeight = 75;
-    					startWidth = 75;
-    					startHeight = 75;
-    				}
-    		
+    				timeEnd = event.getEventTime();
+    				timeTotal += timeEnd - timeStart;
+					recordTrial((int)event.getX(), (int)event.getY(), timeEnd - timeStart, size);
+					
+					
     				
     				// reset, show start
     				if(currTrial < maxTrials)
@@ -189,7 +339,7 @@ public class MyCanvas extends View implements OnTouchListener
 		rectLocX = 0;
 		rectLocY = 0;
 		rectWidth = 75;
-		rectHeight = 75;	
+		rectHeight = 75;
 		
 		paintRect = new Paint();
 		paintRect.setColor(Color.GREEN);
@@ -208,10 +358,11 @@ public class MyCanvas extends View implements OnTouchListener
 		paintStart.setAntiAlias(true);
 		
 		startVisible = true;
-		
+		rectLocX = 700;
+		rectLocY = 350;
 		//Experiment Var
 		data = "'Time'," +  "'X'," + "'Y'," + "'Square Size'," + "'Finger'\n";
-		maxTrials = 60;
+		maxTrials = 90;
 		currTrial = 0;
 		
 		display = ((WindowManager)this.getContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
@@ -236,24 +387,11 @@ public class MyCanvas extends View implements OnTouchListener
 	 * 
 	 * Discrip:
 	 */
-    private void recordTrial(int x, int y, long touchTime)
+    private void recordTrial(int x, int y, long touchTime, int size)
     {
-    	int type = 0;
-    	int finger = 0;
-    	if(rectWidth < 100){
-    		type = 0;
-    	}
-    	else if(rectWidth == 100){
-    		type = 1;
-    	}
-    	else if(rectWidth == 125){
-    		type = 2;
-    	}
-    	if(currTrial >= (maxTrials / 2)){
-    		finger = 1;
-    	}
-    	
-    	data += touchTime + "," + x + "," + y + "," + type +"," + finger +"\n"; 
+
+    	data += touchTime + "," + x + "," + y  + "," + size + "\n";
+    	Log.w("data", data);
     	
     }//end recordTrial
     
