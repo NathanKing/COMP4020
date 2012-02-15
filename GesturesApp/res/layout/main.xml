@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    
+    android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
+    
+		
+	
+	<RelativeLayout
+	    
+	    android:layout_width="fill_parent"
+		android:layout_height="fill_parent">
+		
+	    
+	    <android.gesture.GestureOverlayView 
+			android:id="@+id/gestures"    
+			android:layout_width="900dip"
+	    	android:layout_height="600dip"
+	    	android:orientation="vertical" />
+	    
+		<TextView  
+		    android:id="@+id/shapes"
+   			android:layout_width="fill_parent" 
+    		android:layout_height="wrap_content" 
+    		android:textAppearance="?android:attr/textAppearanceMedium" android:gravity="center_horizontal" android:text="Shapes"
+    		android:layout_toRightOf="@id/gestures"/>
+	    
+			<android.widget.Button
+			    android:id="@+id/circleButton"
+			    android:layout_height="50dip"
+		     	android:layout_width="125dip"
+		     	android:text="Circle"
+		     	android:layout_below="@id/shapes"
+		     	android:layout_toRightOf="@id/gestures" />
+			<android.widget.Button
+			    android:id="@+id/triangleButton"
+			    android:layout_height="50dip"
+		     	android:layout_width="125dip"
+		     	android:text="Triangle"
+		     	android:layout_below="@id/circleButton"
+		     	android:layout_toRightOf="@id/gestures" />
+			<android.widget.Button
+			    android:id="@+id/rectButton"
+			    android:layout_height="50dip"
+		     	android:layout_width="125dip"
+		     	android:text="Rectangle"
+		     	android:layout_below="@id/triangleButton"
+		     	android:layout_toRightOf="@id/gestures" />
+			<android.widget.Button
+			    android:id="@+id/lineButton"
+			    android:layout_height="50dip"
+		     	android:layout_width="125dip"
+		     	android:text="Line"
+		     	android:layout_below="@id/rectButton"
+		     	android:layout_toRightOf="@id/gestures" />
+			
+			
+			<TextView  
+		    	android:id="@+id/colors"
+   				android:layout_width="fill_parent" 
+    			android:layout_height="wrap_content" 
+    			android:textAppearance="?android:attr/textAppearanceMedium" android:gravity="center_horizontal" android:text="Colors"
+    			android:layout_toRightOf="@id/gestures"
+    			android:layout_below="@id/lineButton"
+    			/>
+			
+			<android.widget.RadioGroup
+			    android:id="@+id/radiogroup"
+			    android:layout_width="fill_parent"
+				android:layout_height="fill_parent" 
+				android:layout_below="@id/lineButton"
+			    android:layout_toRightOf="@id/gestures"
+			    android:layout_marginTop="25dip"
+			    
+				>
+			
+		    	<android.widget.RadioButton
+		    	    
+				    android:id="@+id/redButton"
+				    android:layout_height="50dip"
+			     	android:layout_width="125dip"
+			     	android:text="Red"
+			   		android:onClick="colorClicked"
+			     	 />
+		    	
+		    	<android.widget.RadioButton
+				    android:id="@+id/blueButton"
+				    android:layout_height="50dip"
+			     	android:layout_width="125dip"
+			     	android:text="Blue"
+			    	android:onClick="colorClicked"
+			     	/>
+		    	
+		    	<android.widget.RadioButton
+				    android:id="@+id/greenButton"
+				    android:layout_height="50dip"
+			     	android:layout_width="125dip"
+			     	android:text="Green"
+			     	android:onClick="colorClicked"
+			     	/>
+		    </android.widget.RadioGroup>
+	    	
+	    	
+	</RelativeLayout>
+
+</LinearLayout>
