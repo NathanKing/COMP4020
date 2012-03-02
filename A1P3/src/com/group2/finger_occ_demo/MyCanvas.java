@@ -1,5 +1,8 @@
 package com.group2.finger_occ_demo;
 
+import com.group2.finger_occ_demo.data.DataObjects;
+import com.group2.finger_occ_demo.data.Movie;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,6 +18,8 @@ import android.view.WindowManager;
 
 public class MyCanvas extends View implements OnTouchListener, OnDragListener
 {	
+	DataObjects data;
+	
 	Shapes shapes;
 	
 	Display display;
@@ -23,13 +28,21 @@ public class MyCanvas extends View implements OnTouchListener, OnDragListener
 	
 	AlertDialog mainDialog;
 	
-	public MyCanvas(Context context){
+	public MyCanvas(Context context, DataObjects data){
 		super(context);
         setFocusable(true);
         
         setFocusableInTouchMode(true);
         this.setOnTouchListener(this);
         this.setOnDragListener(this);
+        
+        this.data = data;
+        
+        //TODO
+        //TEMPORARY
+        //Test data via println
+        for(Movie movie : data.getMovie())
+        	System.out.println(movie.getTitle());
         
         setup();   
 	}
