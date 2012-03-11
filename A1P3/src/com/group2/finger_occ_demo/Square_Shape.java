@@ -20,11 +20,11 @@ public class Square_Shape {
 	final private int BORDER = 2;//in pixels
 	final private double resizeF = 2;//Constant to resize by {2 for device}
 	
-	Square_Shape(String name, int x, int y, int[] size, int colorNum) {
+	Square_Shape(String name, float x, float y, int[] size, int colorNum) {
 		this.name  = name;
 		
-		this.x = x;
-		this.y = y;
+		this.x = (int) x;
+		this.y = (int) y;
 		this.size = size;
 		this.resizeBy = 0;
 		
@@ -43,7 +43,7 @@ public class Square_Shape {
 		on.drawRect(x - expandByX, y - expandByY, x + size[0] + expandByX, y + size[1] + expandByY, new Paint(Color.BLACK));
 		on.drawRect(x - expandByX + BORDER, y - expandByY + BORDER, x + size[0] + expandByX - BORDER, y + size[1] + expandByY - BORDER, color);
 		
-		on.drawText(name, x - expandByX + 3 + BORDER, y - expandByY + 10 + BORDER, new Paint(Color.BLACK));
+		//on.drawText(name, x - expandByX + 3 + BORDER, y - expandByY + 10 + BORDER, new Paint(Color.BLACK));
 	}
 	
 	/**

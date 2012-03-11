@@ -1,8 +1,5 @@
 package com.group2.finger_occ_demo;
 
-import com.group2.finger_occ_demo.data.DataObjects;
-import com.group2.finger_occ_demo.data.Movie;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,16 +8,14 @@ import android.view.Display;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
 import android.view.View.OnDragListener;
+import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 
 
 public class MyCanvas extends View implements OnTouchListener, OnDragListener
 {	
-	DataObjects data;
-	
-	Shapes shapes;
+	ScatterPlotView scatterView;
 	
 	Display display;
 	int screenWidth;
@@ -28,7 +23,7 @@ public class MyCanvas extends View implements OnTouchListener, OnDragListener
 	
 	AlertDialog mainDialog;
 	
-	public MyCanvas(Context context, DataObjects data){
+	public MyCanvas(Context context){
 		super(context);
         setFocusable(true);
         
@@ -36,41 +31,27 @@ public class MyCanvas extends View implements OnTouchListener, OnDragListener
         this.setOnTouchListener(this);
         this.setOnDragListener(this);
         
-        this.data = data;
-        
-        //TODO
-        //TEMPORARY
-        //Test data via println
-        for(Movie movie : data.getMovie())
-        	System.out.println(movie.getTitle());
-        
         setup();   
 	}
 	
 	/**
-	 * Whenever the canvas is redrawn, these objects are drawn.
+	 * Dispatches onDraw to all views.
 	 */
-	public void onDraw(Canvas canvas) {	
-		shapes.drawShapes(canvas);
+	public void onDraw(Canvas canvas) {
+		scatterView.onDraw(canvas);
 	}
 	
 	/**
-	 * When object is touched alert pops up
+	 * Dispatches onTouch to all views.
 	 */
     public boolean onTouch(View view, MotionEvent event) {
-    	// check if finger is in radius to resize any objects (want to make objects bigger on touch and drag)
-		shapes.checkRadius((int)event.getX(), (int)event.getY());
+    	// Run through views
+    	String toDisplay = scatterView.onTouch(event);
     	
-    	if(event.getAction() == MotionEvent.ACTION_UP ){
-    		// See if finger is in any of the objects
-    		String shape = shapes.inShape((int)event.getX(), (int)event.getY());
-    		if(shape != null){
-    			this.mainDialog.setMessage(shape);
-    			this.mainDialog.show();
-    		}
-    		
-    		// Make all objects normal sized
-    		shapes.goDefaultSize();
+    	// Display messages (one by one later)
+    	if (toDisplay != null){
+	    	this.mainDialog.setMessage(toDisplay);
+			this.mainDialog.show();
     	}
 
 		this.invalidate();
@@ -79,10 +60,10 @@ public class MyCanvas extends View implements OnTouchListener, OnDragListener
     }
     
     /**
-     * Detect getting close to shapes
+     * Sends onDrag to each view.
      */
 	public boolean onDrag(View view, DragEvent event) {
-		shapes.checkRadius((int)event.getX(), (int)event.getY());
+		scatterView.onDrag(event);
 		
     	this.invalidate();
     	
@@ -90,7 +71,7 @@ public class MyCanvas extends View implements OnTouchListener, OnDragListener
 	}
     
 	/**
-	 * Creates drawables, and alert box.
+	 * Creates views, and alert box.
 	 */
 	private void setup(){
 		// Get screen dimensions
@@ -98,7 +79,8 @@ public class MyCanvas extends View implements OnTouchListener, OnDragListener
 		screenWidth = display.getWidth();
 		screenHeight = display.getHeight();
 		
-		shapes = new Shapes(screenWidth, screenHeight);
+		// Create each view
+		scatterView = new ScatterPlotView(screenWidth, screenHeight);
 		
 		//Create alert dialog with default message and OK button
 		mainDialog = new AlertDialog.Builder(this.getContext()).create();
