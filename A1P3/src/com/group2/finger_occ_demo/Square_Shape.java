@@ -72,7 +72,7 @@ public class Square_Shape {
 		int e;
 		int vector = Integer.MAX_VALUE;
 		int maxDiff = 0;
-		for (int point = 0; point < 4; point++){
+		for (int point = 0; point < points.length; point++){
 			f = Math.abs(circle_x - points[point][0]);
 			e = Math.abs(circle_y - points[point][1]);
 			vector = (int) Math.sqrt(Math.pow(f, 2) + Math.pow(e, 2));

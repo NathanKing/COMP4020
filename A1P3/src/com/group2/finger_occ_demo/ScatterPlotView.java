@@ -17,14 +17,17 @@ public class ScatterPlotView {
 	float intervalX;
 	float intervalY;
 	
+	private final int[] X_RANGE = {0, 100};// currently year produced
+	private final int[] Y_RANGE = {0, 10};// currently rating
+	
 	public ScatterPlotView(int screenWidth, int screenHeight){
 		//scatter plot is within 5% of each screen side
 		marginX = (float)(screenWidth * 0.1);
 		marginY = (float)(screenHeight * 0.1);
 		sizeX = (float) (screenWidth - (marginX * 0.5));
-		sizeY = (float) (screenHeight - ((marginY * 0.5) * 6));//*6 is to account for top bar thing
+		sizeY = (float) (screenHeight - ((marginY * 0.5) * 7));//*7 is to account for top bar thing
 		
-		points = new Points((int)(sizeX), (int)(sizeY));
+		points = new Points((int)(sizeX), (int)(sizeY), X_RANGE, Y_RANGE);
 	}
 	
 	/**
@@ -34,7 +37,9 @@ public class ScatterPlotView {
 		//shapes can obscure lines and graph background
 		this.drawGraph(canvas);
 		
+		long start = System.currentTimeMillis();
 		points.drawShapes(canvas);
+		System.out.println("Time taken to draw is: " + (System.currentTimeMillis() - start));
 	}
 	
 	/**
@@ -45,7 +50,9 @@ public class ScatterPlotView {
 		String shape = null;
 		
 		// check if finger is in radius to resize any objects (want to make objects bigger on touch and drag)
+		long start = System.currentTimeMillis();
 		points.checkRadius((int)event.getX(), (int)event.getY());
+		System.out.println("Time taken to check is: " + (System.currentTimeMillis() - start));
     	
     	if(event.getAction() == MotionEvent.ACTION_UP ){
     		// See if finger is in any of the objects

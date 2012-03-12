@@ -23,21 +23,24 @@ public class Points {
 	private int radiusPX;// From the center of a shape
 	private int availableWidth;
 	private int availableHeight;
-	private final int YEAR_INTERVAL = 10;//years
-	private final int RATING_INTERVAL = 1;//1 rating
-	private final int START_YEAR = 1900;
+	
+	private int[] xRange;
+	private int[] yRange;
 	
 	/**
 	 * Responsible for all shapes on screen. Note order of list is the way of doing
 	 * z-indexing.
 	 */
-	public Points(int screenWidth, int screenHeight){
+	public Points(int screenWidth, int screenHeight, int[] xRange, int[] yRange){
+		// Get the available width and ranges
 		this.availableWidth = screenWidth;
 		this.availableHeight = screenHeight;
+		this.xRange = xRange;
+		this.yRange = yRange;
 		
-		// Derive rectangle size from screen size so it looks nice
-		rect_size[0] = (int) (this.availableWidth * 0.05);
-		rect_size[1] = (int) (this.availableWidth * 0.05);
+		// Derive rectangle size from screen size so it looks nice (only for now)
+		rect_size[0] = (int) (this.availableWidth * 0.02);
+		rect_size[1] = (int) (this.availableWidth * 0.02);
 		
 		// Also derive radius from screen size, make it 4 times the shapes size
 		radiusPX = rect_size[0] * 4;
@@ -48,9 +51,10 @@ public class Points {
 	}
 	
 	/**
-	 * Currently uses year on x and rating on height. Divides width
-	 * by year to get and height by rating to get position.
-	 * NOTE: I am assuming availableWidth < latest year and availableHeight > rating max
+	 * Currently uses year on x and rating on height. Formula is:
+	 * (n/m) * r = x or y position,
+	 * where n is the maximum graph value for the axis, n is the maximum value
+	 * for the data points i.e. for rating 10, and r is the current value of the point.
 	 */
 	public void init_from_data(){
 		float x;
@@ -58,12 +62,11 @@ public class Points {
 		
 		List<Movie> movies = canvasApp.data.getMovie();
 		for (Movie movie : movies){
-			x = (float) ((availableWidth/YEAR_INTERVAL) * ((movie.getYear() - START_YEAR) % YEAR_INTERVAL));
-			y = (float) ((availableHeight/RATING_INTERVAL) * ((movie.getRating() +  + 0.00001) % RATING_INTERVAL));// + 0.00001 removes divide by 0 errors
-			System.out.println( ((movie.getYear() - START_YEAR) % YEAR_INTERVAL) + ":" +((movie.getRating() +  + 0.00001) % RATING_INTERVAL));
+			x = (float) ((availableWidth/xRange[1]) * movie.getYear1900());
+			y = (float) (availableHeight - ((availableHeight/yRange[1]) * movie.getRating()));//invert the ratings so 0 is at the bottom
+			//System.out.println(x + ":" + y + ":" + movie.getYear1900());
 			
-			System.out.println(x+":"+y);
-			squares.add(new Square_Shape(movie.getYear() + "", x, y, rect_size, Color.GREEN));
+			squares.add(new Square_Shape(movie.getTitle() + ":" + movie.getRating() + ":" + movie.getYear(), x, y, rect_size, Color.GREEN));
 		}
 		System.out.println(movies.size());
 	}

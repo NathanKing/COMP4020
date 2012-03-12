@@ -1,5 +1,6 @@
 package com.group2.finger_occ_demo.data;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +8,8 @@ import java.util.List;
  * Stores all the data point, follows the same structure as the JSON file. Contains methods to
  * query the data.
  */
-public class DataObjects {
+public class DataObjects implements Serializable{
+	private static final long serialVersionUID = -2568955704117037872L;
 	private List<Movie> movies = new ArrayList<Movie>();
 	private int latestYear;
 	private int highestRating;
