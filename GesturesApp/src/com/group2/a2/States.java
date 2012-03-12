@@ -114,11 +114,11 @@ class States
 				}
 			
 				// Track how far the finger moved and apply it to our canvas offset
-				Point change = new Point(old.x - one.x, old.y - one.y);	// TODO: Test me!
-				screen_offset.translate(change.x, change.y);
+				screen_offset.translate(old.x - one.x, old.y - one.y); // TODO: Test me!
 			
 				break;
 				
+			// One finger, used to explode targets
 			case HOVER:
 				// If user moved, consider the hover state reset
 				if (old.distance(one) > SELECT_MOVE)
