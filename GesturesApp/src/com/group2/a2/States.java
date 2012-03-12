@@ -8,7 +8,11 @@ class States
 	
 		return 0;
 	}
-	
+
+	/* WARNING: There's likely a horrible bug when switching between resize and swipe states
+		Basically, there will be a huge jump if the user removes the initial finger before
+		the secondary finger.
+	*/	
 	
 	enum FingerStates
 	{
