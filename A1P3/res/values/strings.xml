@@ -3,5 +3,6 @@
 
     <string name="hello">Hello World, A1Activity!</string>
     <string name="app_name">A3</string>
+    <string name="loadMsg">Loading Data...</string>
 
 </resources>

@@ -26,12 +26,17 @@ public class Points {
 	
 	private int[] xRange;
 	private int[] yRange;
+	private int xOffset;
+	private int yOffset;
 	
 	/**
 	 * Responsible for all shapes on screen. Note order of list is the way of doing
 	 * z-indexing.
 	 */
 	public Points(int screenWidth, int screenHeight, int[] xRange, int[] yRange){
+		xOffset = 0;
+		yOffset = 0;
+		
 		// Get the available width and ranges
 		this.availableWidth = screenWidth;
 		this.availableHeight = screenHeight;
@@ -62,13 +67,12 @@ public class Points {
 		
 		List<Movie> movies = canvasApp.data.getMovie();
 		for (Movie movie : movies){
-			x = (float) ((availableWidth/xRange[1]) * movie.getYear1900());
-			y = (float) (availableHeight - ((availableHeight/yRange[1]) * movie.getRating()));//invert the ratings so 0 is at the bottom
-			//System.out.println(x + ":" + y + ":" + movie.getYear1900());
+			x = (float) ( (availableWidth/(xRange[1] - xRange[0]) * movie.getYear1900()) + xOffset);
+			y = (float) ( (availableHeight - ((availableHeight/(yRange[1] - yRange[0]) * movie.getRating())) ) + yOffset);//invert the ratings so 0 is at the bottom
+			System.out.println("offsets are:" + xOffset + ":" + yOffset);
 			
 			squares.add(new Square_Shape(movie.getTitle() + ":" + movie.getRating() + ":" + movie.getYear(), x, y, rect_size, Color.GREEN));
 		}
-		System.out.println(movies.size());
 	}
 	
 	/**
@@ -147,5 +151,24 @@ public class Points {
 	public void goDefaultSize(){
 		for (int i = 0; i < squares.size(); i++)
 			squares.get(i).setDefaultSize();
+	}
+	
+	/*
+	 * Getters and setters
+	 */
+	public void translate(int xOffset, int yOffset){
+		this.xOffset = xOffset;
+		this.yOffset = yOffset;
+		
+		for (Square_Shape square : squares)
+			square.translate(xOffset, yOffset);
+	}
+	
+	public void resetPosition(){
+		this.xOffset = 0;
+		this.yOffset = 0;
+		
+		for (Square_Shape square : squares)
+			square.resetPosition();
 	}
 }

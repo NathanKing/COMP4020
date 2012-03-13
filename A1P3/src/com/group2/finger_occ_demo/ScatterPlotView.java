@@ -9,16 +9,17 @@ import android.view.MotionEvent;
  * Implements view for scatter plot.
  */
 public class ScatterPlotView {
-	Points points;
-	float sizeX;
-	float sizeY;
-	float marginX;
-	float marginY;
-	float intervalX;
-	float intervalY;
+	private Points points;
+	private float sizeX;
+	private float sizeY;
+	private float marginX;
+	private float marginY;
 	
-	private final int[] X_RANGE = {0, 100};// currently year produced
-	private final int[] Y_RANGE = {0, 10};// currently rating
+	private int[] xRange = {0, 100};// currently year produced
+	private int[] yRange = {0, 10};// currently rating
+	
+	private int xOffset;
+	private int yOffset;
 	
 	public ScatterPlotView(int screenWidth, int screenHeight){
 		//scatter plot is within 5% of each screen side
@@ -27,7 +28,12 @@ public class ScatterPlotView {
 		sizeX = (float) (screenWidth - (marginX * 0.5));
 		sizeY = (float) (screenHeight - ((marginY * 0.5) * 7));//*7 is to account for top bar thing
 		
-		points = new Points((int)(sizeX), (int)(sizeY), X_RANGE, Y_RANGE);
+		xOffset = 0;
+		yOffset = 0;
+		
+		points = new Points((int)(sizeX), (int)(sizeY), xRange, yRange);
+		
+		//positionGraph();
 	}
 	
 	/**
@@ -47,6 +53,9 @@ public class ScatterPlotView {
 	 * Returns any alert message text.
 	 */
 	public String onTouch(MotionEvent event) {
+		//TODO remove once done testing
+		translatePlot(50, 20);
+		
 		String shape = null;
 		
 		// check if finger is in radius to resize any objects (want to make objects bigger on touch and drag)
@@ -73,7 +82,31 @@ public class ScatterPlotView {
 	}
 	
 	/*
-	 * Non generic functions
+	 * Graph translation and zooming
+	 */
+	
+	/**
+	 * Offsets the CURRENT scatter plot by the given amount.
+	 */
+	public void translatePlot(int xOffset, int yOffset){
+		this.xOffset += xOffset;
+		this.yOffset += yOffset;
+		
+		points.translate(xOffset, yOffset);
+	}
+	
+	/**
+	 * Resets scatter plot. Currently only resets panning.
+	 */
+	public void resetGraph(){
+		this.xOffset = 0;
+		this.yOffset = 0;
+		
+		points.resetPosition();
+	}
+	
+	/*
+	 * Non generic draw functions
 	 */
 	
 	/**
@@ -84,9 +117,9 @@ public class ScatterPlotView {
 		black.setStrokeWidth(3);
 		
 		//left line
-		canvas.drawLine((float)(marginX * 0.5), (float)(marginY * 0.5), (float)(marginX * 0.5), sizeY, black);
+		canvas.drawLine((float)(marginX * 0.5) + xOffset, (float)(marginY * 0.5) + yOffset, (float)(marginX * 0.5) + xOffset, sizeY + yOffset, black);
 		
 		//bottom line
-		canvas.drawLine((float)(marginX * 0.5), sizeY, sizeX, sizeY, black);
+		canvas.drawLine((float)(marginX * 0.5) + xOffset, sizeY + yOffset, sizeX + xOffset, sizeY + yOffset, black);
 	}
 }

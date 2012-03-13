@@ -10,6 +10,8 @@ import android.graphics.Paint;
  */
 public class Square_Shape {
 	public String name;
+	private int xDefault;
+	private int yDefault;
 	private int x;
 	private int y;
 	private int[] size;
@@ -40,8 +42,8 @@ public class Square_Shape {
 	public void draw(Canvas on){
 		int expandByX = (int) (size[0] * (resizeBy*0.5));
 		int expandByY = (int) (size[1] * (resizeBy*0.5));
-		on.drawRect(x - expandByX, y - expandByY, x + size[0] + expandByX, y + size[1] + expandByY, new Paint(Color.BLACK));
-		on.drawRect(x - expandByX + BORDER, y - expandByY + BORDER, x + size[0] + expandByX - BORDER, y + size[1] + expandByY - BORDER, color);
+		on.drawRect(getX() - expandByX, y - expandByY, getX() + size[0] + expandByX, y + size[1] + expandByY, new Paint(Color.BLACK));
+		on.drawRect(getX() - expandByX + BORDER, y - expandByY + BORDER, getX() + size[0] + expandByX - BORDER, y + size[1] + expandByY - BORDER, color);
 		
 		//on.drawText(name, x - expandByX + 3 + BORDER, y - expandByY + 10 + BORDER, new Paint(Color.BLACK));
 	}
@@ -52,7 +54,7 @@ public class Square_Shape {
 	public boolean inShape(int[] position){
 		int expandByX = (int) (size[0] * (resizeBy*0.5));
 		int expandByY = (int) (size[1] * (resizeBy*0.5));
-		return ((position[0] > x - expandByX) && (position[0] < x + size[0] + expandByX && (position[1] > y - expandByY) && (position[1] < y + size[1] + expandByY) ));
+		return ((position[0] > getX() - expandByX) && (position[0] < getX() + size[0] + expandByX && (position[1] > y - expandByY) && (position[1] < y + size[1] + expandByY) ));
 	}
 	
 	/**color
@@ -61,10 +63,10 @@ public class Square_Shape {
 	 */
 	public void checkRadius(int circle_x, int circle_y, int radius){
 		// All points for the current square
-		int[][] points = {{x, y}, 
-						  {x + size[0], y},
-						  {x, y + size[1]},
-						  {x + size[0], y + size[1]}};
+		int[][] points = {{getX(), y}, 
+						  {getX() + size[0], y},
+						  {getX(), y + size[1]},
+						  {getX() + size[0], y + size[1]}};
 		
 		// Loop though all points checking if the vector from the circle to the square
 		// is longer than the circle radius (no intersection) and by how much.
@@ -86,6 +88,11 @@ public class Square_Shape {
 			resizeBy = (maxDiff * (resizeF * 0.01));
 	}
 	
+	public void translate(int xOffset, int yOffset){
+		this.x += xOffset;
+		this.y += yOffset;
+	}
+	
 	/**
 	 * Set resizeBy to 1 making the shapes size normal.
 	 */
@@ -94,9 +101,37 @@ public class Square_Shape {
 	}
 	
 	/**
+	 * Reset sqaure to the position it originally displayed in.
+	 */
+	public void resetPosition() {
+		x = xDefault;
+		y = yDefault;
+	}
+	
+	/*
+	 * Getters and Setters
+	 */
+	
+	/**
 	 * Receives computed size.
 	 */
 	public int getSize(){
 		return (int) (size[0] * (resizeBy));
+	}
+
+	public int getX() {
+		return x;
+	}
+
+	public void setX(int x) {
+		this.x = x;
+	}
+	
+	public int getY() {
+		return y;
+	}
+
+	public void setY(int y) {
+		this.y = y;
 	}
 }
