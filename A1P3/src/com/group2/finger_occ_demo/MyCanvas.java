@@ -42,19 +42,17 @@ public class MyCanvas extends View implements OnTouchListener, OnDragListener
 	}
 	
 	/**
-	 * Dispatches onTouch to all views.
+	 * Dispatches onTouch to all views. invalidate bubbles down.
 	 */
     public boolean onTouch(View view, MotionEvent event) {
     	// Run through views
-    	String toDisplay = scatterView.onTouch(event);
+    	String toDisplay = scatterView.onTouch(event, view);
     	
     	// Display messages (one by one later)
     	if (toDisplay != null){
 	    	this.mainDialog.setMessage(toDisplay);
 			this.mainDialog.show();
     	}
-
-		this.invalidate();
 		
         return true;   
     }
@@ -63,9 +61,7 @@ public class MyCanvas extends View implements OnTouchListener, OnDragListener
      * Sends onDrag to each view.
      */
 	public boolean onDrag(View view, DragEvent event) {
-		scatterView.onDrag(event);
-		
-    	this.invalidate();
+		scatterView.onDrag(event, view);
     	
 		return true;
 	}

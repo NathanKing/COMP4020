@@ -30,9 +30,6 @@ public class canvasApp extends Activity {
     /** Called when the activity is first created.. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-    	//reset heap size (WILL BE DEPRECATED SOON)
-    	//VMRuntime heap = VMRuntime.getRuntime();
-    	
     	DataObjectCreator creator = new DataObjectCreator(this.getAssets(), getBaseContext());
     	
         super.onCreate(savedInstanceState);
@@ -47,7 +44,7 @@ public class canvasApp extends Activity {
         
         // Create a new canvas set it as the view and give it focus. Also give it
         // the data created from the json file.
-		canvasView = new MyCanvas(this);		
+		canvasView = new MyCanvas(this);
         setContentView(canvasView);
         canvasView.setBackgroundColor(Color.WHITE);
         canvasView.requestFocus();

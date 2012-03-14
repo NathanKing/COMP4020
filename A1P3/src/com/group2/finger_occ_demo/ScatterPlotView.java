@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.view.DragEvent;
 import android.view.MotionEvent;
+import android.view.View;
 
 /**
  * Implements view for scatter plot.
@@ -32,8 +33,6 @@ public class ScatterPlotView {
 		yOffset = 0;
 		
 		points = new Points((int)(sizeX), (int)(sizeY), xRange, yRange);
-		
-		//positionGraph();
 	}
 	
 	/**
@@ -43,25 +42,26 @@ public class ScatterPlotView {
 		//shapes can obscure lines and graph background
 		this.drawGraph(canvas);
 		
-		long start = System.currentTimeMillis();
+		//long start = System.currentTimeMillis();
 		points.drawShapes(canvas);
-		System.out.println("Time taken to draw is: " + (System.currentTimeMillis() - start));
+		//System.out.println("Time taken to draw is: " + (System.currentTimeMillis() - start));
 	}
 	
 	/**
 	 * Handles touching on the scatter plot. Make sure the event is sent in.
 	 * Returns any alert message text.
+	 * @param view 
 	 */
-	public String onTouch(MotionEvent event) {
+	public String onTouch(MotionEvent event, View view) {
 		//TODO remove once done testing
-		translatePlot(50, 20);
+		//translatePlot(50, 20);
 		
 		String shape = null;
 		
 		// check if finger is in radius to resize any objects (want to make objects bigger on touch and drag)
-		long start = System.currentTimeMillis();
-		points.checkRadius((int)event.getX(), (int)event.getY());
-		System.out.println("Time taken to check is: " + (System.currentTimeMillis() - start));
+		//long start = System.currentTimeMillis();
+		points.checkRadius((int)event.getX(), (int)event.getY(), view);
+		//System.out.println("Time taken to check is: " + (System.currentTimeMillis() - start));
     	
     	if(event.getAction() == MotionEvent.ACTION_UP ){
     		// See if finger is in any of the objects
@@ -69,6 +69,8 @@ public class ScatterPlotView {
     		
     		// Make all objects normal sized
     		points.goDefaultSize();
+    		
+    		view.invalidate();
     	}
     	
     	return shape;
@@ -76,9 +78,10 @@ public class ScatterPlotView {
 	
 	/**
      * Detect drags on the scatterplot
+	 * @param view 
      */
-	public void onDrag(DragEvent event) {
-		points.checkRadius((int)event.getX(), (int)event.getY());
+	public void onDrag(DragEvent event, View view) {
+		points.checkRadius((int)event.getX(), (int)event.getY(), view);
 	}
 	
 	/*

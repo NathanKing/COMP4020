@@ -5,10 +5,13 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import com.group2.finger_occ_demo.data.Movie;
-
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RectShape;
+import android.view.View;
+
+import com.group2.finger_occ_demo.data.Movie;
 
 /**
  * Responsible for all shapes on screen. Note order of list is the way of doing
@@ -16,10 +19,11 @@ import android.graphics.Color;
  */
 public class Points {
 	
-	final int RECT_NUM = 30;
+	final int RAND_RECT_NUM = 30;
 	
 	private int[] rect_size = {20, 20};
 	private ArrayList<Square_Shape> squares;
+	private ArrayList<ShapeDrawable> testSquares;
 	private int radiusPX;// From the center of a shape
 	private int availableWidth;
 	private int availableHeight;
@@ -30,7 +34,7 @@ public class Points {
 	private int yOffset;
 	
 	/**
-	 * Responsible for all shapes on screen. Note order of list is the way of doing
+	 * Responsible for all shapes in a given box. Note order of list is the way of doing
 	 * z-indexing.
 	 */
 	public Points(int screenWidth, int screenHeight, int[] xRange, int[] yRange){
@@ -51,8 +55,9 @@ public class Points {
 		radiusPX = rect_size[0] * 4;
 		
 		squares = new ArrayList<Square_Shape>();
+		testSquares = new ArrayList<ShapeDrawable>();
+		//init_from_data();
 		init_from_data();
-		//init_random();
 	}
 	
 	/**
@@ -69,9 +74,10 @@ public class Points {
 		for (Movie movie : movies){
 			x = (float) ( (availableWidth/(xRange[1] - xRange[0]) * movie.getYear1900()) + xOffset);
 			y = (float) ( (availableHeight - ((availableHeight/(yRange[1] - yRange[0]) * movie.getRating())) ) + yOffset);//invert the ratings so 0 is at the bottom
-			System.out.println("offsets are:" + xOffset + ":" + yOffset);
 			
-			squares.add(new Square_Shape(movie.getTitle() + ":" + movie.getRating() + ":" + movie.getYear(), x, y, rect_size, Color.GREEN));
+			squares.add(new Square_Shape(movie.getTitle(), x, y, rect_size, Color.GREEN));
+			
+			testSquares.add(new ShapeDrawable(new RectShape()));
 		}
 	}
 	
@@ -82,7 +88,7 @@ public class Points {
 		// Omit first and last 2 squares
 		int[] colors = {Color.RED, Color.YELLOW, Color.GREEN};
 		int color_num = 0;
-		for (int i = 1; i < RECT_NUM; i++){
+		for (int i = 1; i < RAND_RECT_NUM; i++){
 			squares.add(new Square_Shape(i + "", getR(availableWidth), getR(availableHeight), rect_size, colors[color_num]));
 			
 			color_num++;
@@ -96,11 +102,21 @@ public class Points {
 	}
 	
 	/**
-	 * Draw all shapes on the sent canvas
+	 * Draw all shapes visible on the sent canvas. Due to ordering shapes in the same position end up in the
+	 * same place of an array. So can use previous coordinates to determine if shape is drawable.
 	 */
 	public void drawShapes(Canvas on){
-		for (int i = 0; i < squares.size(); i++)
-			squares.get(i).draw(on);
+		Square_Shape square;
+		int[] prevXY = {-1,-1};// should not be on screen, meaning first shape is always drawn
+		
+		for (int i = 0; i < squares.size(); i++){
+			square =  squares.get(i);
+			if ( !(square.getX() == prevXY[0] && square.getY() == prevXY[1])){
+				square.draw(on);
+				prevXY[0] = square.getX();
+				prevXY[1] = square.getY();
+			}
+		}
 	}
 	
 	/**
@@ -119,14 +135,27 @@ public class Points {
 	}
 	
 	/**
-	 * Checks an expands any shapes in the current radius. The biggest objects
-	 * are put in front.
+	 * Checks an expands any shapes in the current radius. Does this by specifying and area
+	 * that will need to be redrawn. The biggest objects are put in front.
 	 */
-	public void checkRadius(int x, int y){
-		for (int i = 0; i < squares.size(); i++)
-			squares.get(i).checkRadius(x, y, radiusPX);
+	public void checkRadius(int x, int y, View view){
+		Square_Shape square;
+		int largeRadius = (int) (radiusPX * 1.5);
+		
+		//long start = System.currentTimeMillis();
+		for (int i = 0; i < squares.size(); i++){
+			square = squares.get(i);
+			// if a square is double the distance away don't bother calculating it. This is a rough approximation keep in mind.
+			if ( (square.getX() > x - largeRadius && square.getX() < x + largeRadius) &&
+				 (square.getY() > y - largeRadius && square.getY() < y + largeRadius))
+				square.checkRadius(x, y, radiusPX);		
+		}		
+		//System.out.println("Check Radius time: " + (System.currentTimeMillis() - start));
 		
 		reorderZ();
+		
+		// invalidate only this rectangle.
+		view.invalidate(x - largeRadius, y - largeRadius, x + largeRadius, y + largeRadius);
 	}
 	
 	/**
