@@ -69,13 +69,49 @@ public class Points {
 	public void init_from_data(){
 		float x;
 		float y;
-		
+		int color = Color.GREEN;
 		List<Movie> movies = canvasApp.data.getMovie();
 		for (Movie movie : movies){
 			x = (float) ( (availableWidth/(xRange[1] - xRange[0]) * movie.getYear1900()) + xOffset);
 			y = (float) ( (availableHeight - ((availableHeight/(yRange[1] - yRange[0]) * movie.getRating())) ) + yOffset);//invert the ratings so 0 is at the bottom
 			
-			squares.add(new Square_Shape(movie.getTitle(), x, y, rect_size, Color.GREEN));
+			if(movie.getGenre().get(0).equals("Action")){
+				color = Color.WHITE;
+			}
+			else if(movie.getGenre().get(0).equals("Drama")){
+				color = Color.RED;
+				
+			}
+			else if(movie.getGenre().get(0).equals("Mystery")){
+				color = Color.BLUE;
+				
+			}
+			else if(movie.getGenre().get(0).equals("Comedy")){
+				color = Color.MAGENTA;
+				
+			}
+			else if(movie.getGenre().get(0).equals("Music")){
+				color = Color.YELLOW;
+				
+			}
+			else if(movie.getGenre().get(0).equals("War")){
+				color = Color.GREEN;
+				
+			}
+			else if(movie.getGenre().get(0).equals("Sci-Fi")){
+				color = Color.rgb(255, 69, 0);//orange
+				
+			}
+			else if(movie.getGenre().get(0).equals("Western")){
+				color = Color.CYAN;
+				
+			}
+			else if(movie.getGenre().get(0).equals("Horror")){
+				color = Color.BLACK;
+				
+			}
+			
+			squares.add(new Square_Shape(movie.getTitle(), x, y, rect_size, color));
 			
 			testSquares.add(new ShapeDrawable(new RectShape()));
 		}

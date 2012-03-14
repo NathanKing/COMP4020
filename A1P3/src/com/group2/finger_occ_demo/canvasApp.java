@@ -44,6 +44,7 @@ public class canvasApp extends Activity {
         
         // Create a new canvas set it as the view and give it focus. Also give it
         // the data created from the json file.
+        
 		canvasView = new MyCanvas(this);
         setContentView(canvasView);
         canvasView.setBackgroundColor(Color.WHITE);
