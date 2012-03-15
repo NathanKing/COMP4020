@@ -13,7 +13,15 @@
             android:id="@+id/frame"
             android:layout_width="fill_parent"
     		android:layout_height="600dip"/>
-      
+        
+        
+      	<TextView
+        	android:layout_width="fill_parent"
+      	    android:layout_height="wrap_content"
+      	    android:layout_below="@id/frame"
+      	    android:layout_marginLeft="20dip"
+      	    android:text="@string/genre_prompt"/>
+        
         <Spinner 
             android:id="@+id/genres"
             android:layout_width="200dip"
@@ -21,9 +29,17 @@
             android:layout_below="@id/frame"
             android:prompt="@string/genre_prompt"/>
         
+        <TextView
+        	android:layout_width="fill_parent"
+      	    android:layout_height="wrap_content"
+      	    android:layout_below="@id/frame"
+      		android:layout_toRightOf="@id/genres"
+      	    android:layout_marginLeft="20dip"
+      	    android:text="@string/rating_prompt"/>
+        
         <Spinner
             android:id="@+id/ratings"
-           	android:layout_width="200dip"
+           	android:layout_width="150dip"
     		android:layout_height="50dip"
             android:layout_below="@id/frame"
             android:layout_toRightOf="@id/genres"
@@ -36,6 +52,15 @@
             android:layout_below="@id/frame"
             android:layout_toRightOf="@id/ratings"
             android:visibility="gone"/>
+        
+        <android.widget.Button
+            android:id="@+id/login"
+            android:layout_width="150dip"
+    		android:layout_height="50dip"
+    		android:layout_below="@id/frame"
+    		android:layout_toRightOf="@id/ratings"
+    		android:text="Login"
+    		android:onClick="login"/>
     
     </RelativeLayout>
 

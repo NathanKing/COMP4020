@@ -51,10 +51,6 @@ public class canvasApp extends Activity implements OnItemSelectedListener {
         // Give default view until main screen is loaded
         setContentView(R.layout.main);
         
-        
-        
-
-        
         // Get the data from the JSON file
         
         long start = System.currentTimeMillis();
@@ -62,19 +58,21 @@ public class canvasApp extends Activity implements OnItemSelectedListener {
         System.out.println("Time taken to load is: " + (System.currentTimeMillis() - start));
        
         int i = 0;
+        
+        //create directors list
         for(Movie m:data.getMovie()){
         	
         	if(!(directors.contains(m.getDirector()))){
         		directors.add(m.getDirector());
         	}
         }
-       
+        
+        directors.add(0, "All");
         Collections.sort(directors);
         ArrayAdapter<CharSequence> adapter;
         
         Spinner dirs = (Spinner) findViewById(R.id.directors);
         adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, directors);
-        
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         dirs.setAdapter(adapter);
 
@@ -138,7 +136,6 @@ public class canvasApp extends Activity implements OnItemSelectedListener {
 		
 		String genre = genres.getSelectedItem().toString();
 		String rating = ratings.getSelectedItem().toString();
-		String length = "All";
 		
 		if(parent.getId() == R.id.genres){
 			 
@@ -156,8 +153,15 @@ public class canvasApp extends Activity implements OnItemSelectedListener {
 	}
 
 	@Override
-	public void onNothingSelected(AdapterView<?> arg0) {
-		// TODO Auto-generated method stub
+	public void onNothingSelected(AdapterView<?> parent) {
+		
+	}
+	
+	
+	
+	public void login(View view){
+		
+		//do your login stuff here
 		
 	}
     
