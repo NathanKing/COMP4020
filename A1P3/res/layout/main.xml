@@ -3,6 +3,41 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
+    
+    <RelativeLayout
+        android:id="@+id/layout"
+        android:layout_width="fill_parent"
+    	android:layout_height="fill_parent" >
+    	
+        <FrameLayout
+            android:id="@+id/frame"
+            android:layout_width="fill_parent"
+    		android:layout_height="600dip"/>
+      
+        <Spinner 
+            android:id="@+id/genres"
+            android:layout_width="200dip"
+    		android:layout_height="50dip"
+            android:layout_below="@id/frame"
+            android:prompt="@string/genre_prompt"/>
+        
+        <Spinner
+            android:id="@+id/ratings"
+           	android:layout_width="200dip"
+    		android:layout_height="50dip"
+            android:layout_below="@id/frame"
+            android:layout_toRightOf="@id/genres"
+            android:prompt="@string/rating_prompt"/>
+            
+        <Spinner 
+            android:id="@+id/directors"
+            android:layout_width="225dip"
+    		android:layout_height="50dip"
+            android:layout_below="@id/frame"
+            android:layout_toRightOf="@id/ratings"
+            android:visibility="gone"/>
+    
+    </RelativeLayout>
 
     <ProgressBar
         android:id="@+id/progressBar1"

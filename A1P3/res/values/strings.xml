@@ -4,5 +4,41 @@
     <string name="hello">Hello World, A1Activity!</string>
     <string name="app_name">A3</string>
     <string name="loadMsg">Loading Data...</string>
-
+    
+    <string name="genre_prompt">Choose a Genre</string>
+    <string-array name="genre_array">
+        <item>All</item>
+        <item>Action</item>
+        <item>Comedy</item>
+        <item>Drama</item>
+        <item>Family</item>
+        <item>Fantasy</item>
+        <item>Horror</item>
+        <item>Music</item>
+        <item>Mystery</item>
+        <item>Romance</item>
+        <item>Sci-Fi</item>
+        <item>Short</item>
+        <item>Thriller</item>
+        <item>War</item>
+        <item>Western</item>
+    </string-array>
+    
+    <string name="rating_prompt">Select a Rating</string>
+    <string-array name="rating_array">
+        <item>All</item>
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+  		<item>5</item>
+  		<item>6</item>
+  		<item>7</item>
+  		<item>8</item>
+  		<item>9</item>
+    </string-array>
+    
+    
+    
 </resources>

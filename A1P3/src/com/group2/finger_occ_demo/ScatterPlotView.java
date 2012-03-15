@@ -10,7 +10,7 @@ import android.view.View;
  * Implements view for scatter plot.
  */
 public class ScatterPlotView {
-	private Points points;
+	public Points points;
 	private float sizeX;
 	private float sizeY;
 	private float marginX;

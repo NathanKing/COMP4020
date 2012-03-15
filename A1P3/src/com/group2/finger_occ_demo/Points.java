@@ -32,7 +32,7 @@ public class Points {
 	private int[] yRange;
 	private int xOffset;
 	private int yOffset;
-	
+		
 	/**
 	 * Responsible for all shapes in a given box. Note order of list is the way of doing
 	 * z-indexing.
@@ -75,46 +75,60 @@ public class Points {
 			x = (float) ( (availableWidth/(xRange[1] - xRange[0]) * movie.getYear1900()) + xOffset);
 			y = (float) ( (availableHeight - ((availableHeight/(yRange[1] - yRange[0]) * movie.getRating())) ) + yOffset);//invert the ratings so 0 is at the bottom
 			
-			if(movie.getGenre().get(0).equals("Action")){
-				color = Color.WHITE;
-			}
-			else if(movie.getGenre().get(0).equals("Drama")){
-				color = Color.RED;
-				
-			}
-			else if(movie.getGenre().get(0).equals("Mystery")){
-				color = Color.BLUE;
-				
-			}
-			else if(movie.getGenre().get(0).equals("Comedy")){
-				color = Color.MAGENTA;
-				
-			}
-			else if(movie.getGenre().get(0).equals("Music")){
-				color = Color.YELLOW;
-				
-			}
-			else if(movie.getGenre().get(0).equals("War")){
-				color = Color.GREEN;
-				
-			}
-			else if(movie.getGenre().get(0).equals("Sci-Fi")){
-				color = Color.rgb(255, 69, 0);//orange
-				
-			}
-			else if(movie.getGenre().get(0).equals("Western")){
-				color = Color.CYAN;
-				
-			}
-			else if(movie.getGenre().get(0).equals("Horror")){
-				color = Color.BLACK;
-				
-			}
-			
+			color = getColor(movie.getGenre().get(0));
+
 			squares.add(new Square_Shape(movie.getTitle(), x, y, rect_size, color));
 			
 			testSquares.add(new ShapeDrawable(new RectShape()));
 		}
+	}
+	
+	public void filter_points(String genre, String rating){
+		squares = new ArrayList<Square_Shape>();
+		testSquares = new ArrayList<ShapeDrawable>();
+		float x;
+		float y;
+		int color = Color.GREEN;
+		List<Movie> movies;
+		
+		if(genre.equals("All") && rating.equals("All")){
+			movies = canvasApp.data.getMovie();
+		}
+		else{
+			movies = new ArrayList<Movie>();
+			
+			for(Movie movie : canvasApp.data.getMovie()){
+				
+				String g = movie.getGenre().get(0);
+				int r = movie.getRating();
+				
+				if(genre.equals("All")){
+					if(r==Integer.valueOf(rating)){
+						movies.add(movie);
+					}
+				}
+				
+				else if(rating.equals("All")){
+					if(g.equals(genre)){
+						movies.add(movie);
+					}
+				}
+				
+				else if(g.equals(genre) && r==Integer.valueOf(rating)){
+					movies.add(movie);
+				}
+			}
+		}
+		
+		for (Movie movie : movies){
+			x = (float) ( (availableWidth/(xRange[1] - xRange[0]) * movie.getYear1900()) + xOffset);
+			y = (float) ( (availableHeight - ((availableHeight/(yRange[1] - yRange[0]) * movie.getRating())) ) + yOffset);//invert the ratings so 0 is at the bottom
+			
+			color = getColor(movie.getGenre().get(0));
+			squares.add(new Square_Shape(movie.getTitle(), x, y, rect_size, color));
+			testSquares.add(new ShapeDrawable(new RectShape()));
+		}
+		
 	}
 	
 	/**
@@ -235,5 +249,52 @@ public class Points {
 		
 		for (Square_Shape square : squares)
 			square.resetPosition();
+	}
+	
+	public int getColor(String color){
+		
+		if(color.equals("Action")){
+			return Color.WHITE;
+		}
+		else if(color.equals("Drama")){
+			return Color.RED;	
+		}
+		else if(color.equals("Mystery")){
+			return Color.BLUE;
+		}
+		else if(color.equals("Comedy")){
+			return Color.MAGENTA;
+		}
+		else if(color.equals("Music")){
+			return Color.YELLOW;
+		}
+		else if(color.equals("War")){
+			return Color.GREEN;
+		}
+		else if(color.equals("Sci-Fi")){
+			return Color.rgb(255, 69, 0);//orange
+		}
+		else if(color.equals("Western")){
+			return Color.rgb(238, 221, 130);
+		}
+		else if(color.equals("Horror")){
+			return Color.rgb(152, 251, 152);
+		}
+		else if(color.equals("Family")){
+			return Color.rgb(160, 32, 240);
+		}
+		else if(color.equals("Fantasy")){
+			return Color.rgb(224, 255, 255);
+		}
+		else if(color.equals("Romance")){
+			return Color.rgb(255, 20, 147);
+		}
+		else if(color.equals("Short")){
+			return Color.GRAY;
+		}
+		else if(color.equals("Thriller")){
+			return Color.rgb(178, 34, 34);
+		}
+		return Color.WHITE;
 	}
 }

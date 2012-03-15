@@ -7,26 +7,35 @@ import android.graphics.Canvas;
 import android.view.Display;
 import android.view.DragEvent;
 import android.view.MotionEvent;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnDragListener;
 import android.view.View.OnTouchListener;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.RelativeLayout;
+import android.widget.Spinner;
+import android.widget.Toast;
+
 
 
 public class MyCanvas extends View implements OnTouchListener, OnDragListener
 {	
 	ScatterPlotView scatterView;
-	
+
 	Display display;
 	int screenWidth;
 	int screenHeight;
 	
+	
+
 	AlertDialog mainDialog;
 	
 	public MyCanvas(Context context){
 		super(context);
         setFocusable(true);
-        
+                
         setFocusableInTouchMode(true);
         this.setOnTouchListener(this);
         this.setOnDragListener(this);
