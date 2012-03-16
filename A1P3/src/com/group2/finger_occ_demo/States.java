@@ -2,6 +2,9 @@ package com.group2.finger_occ_demo;
 
 import java.awt.*;
 
+import android.view.DragEvent;
+import android.view.MotionEvent;
+
 class States
 {
 	enum FingerStates
@@ -132,5 +135,23 @@ class States
 		old = one;
 		return fs;
 	}
+	
+	static FingerStates massageEvent(MotionEvent e)
+	{
+		Point2D one = new Point2D(e.getX(0), e.getY(0));
+		Point2D two = null;
+		
+		if (e.getPointerCount() > 1)
+		{
+			two = new Point2D(e.getX(1), e.getY(1));
+		}
+		
+		return inputMachine(one, two);
+	}
+
+	public static void massageEvent(DragEvent event)
+	{
+		Point2D one = new Point2D(event.getX(), event.getY());
+		Point2D two = 
+	}
 }
-*/

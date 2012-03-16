@@ -18,7 +18,7 @@ public class Point2D {
 		return Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
 	}
 	
-	public void translate(int x, int y)
+	public void translate(float x, float y)
 	{
 		this.x -= x;
 		this.y -= y;
@@ -28,7 +28,7 @@ public class Point2D {
 		return x;
 	}
 
-	public void setX(int x) {
+	public void setX(float x) {
 		this.x = x;
 	}
 
