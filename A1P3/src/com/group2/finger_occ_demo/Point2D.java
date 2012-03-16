@@ -1,11 +1,17 @@
 package com.group2.finger_occ_demo;
 
 public class Point2D {
-	protected int x;
-	protected int y;
+	protected float x;
+	protected float y;
+
+	public Point2D(float x, float y)
+	{
+		this.x = x;
+		this.y = y;
+	}
 	
 	public double distance(Point2D dest){
-		int a, b;
+		float a, b;
 		
 		a = Math.abs(x - dest.x);
 		b = Math.abs(y - dest.y);
@@ -18,7 +24,7 @@ public class Point2D {
 		this.y -= y;
 	}
 	
-	public int getX() {
+	public float getX() {
 		return x;
 	}
 
@@ -26,7 +32,7 @@ public class Point2D {
 		this.x = x;
 	}
 
-	public int getY() {
+	public float getY() {
 		return y;
 	}
 
