@@ -39,7 +39,6 @@ public class MyCanvas extends View implements OnTouchListener, OnDragListener
         setFocusableInTouchMode(true);
         this.setOnTouchListener(this);
         this.setOnDragListener(this);
-        this.setOnGenericMotionListener(this);
         
         setup();   
 	}
@@ -75,15 +74,7 @@ public class MyCanvas extends View implements OnTouchListener, OnDragListener
      */
 	public boolean onDrag(View view, DragEvent event) {
 		scatterView.onDrag(event, view);
-		
-    	// Feed state machine
-    	States.massageEvent(event);
     	
-		return true;
-	}
-	
-	public boolean onGenericMotionListener(View v, MotionEvent event) {
-		States.massageEvent(event);
 		return true;
 	}
     
