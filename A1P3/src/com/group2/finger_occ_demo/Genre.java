@@ -1,5 +1,6 @@
 package com.group2.finger_occ_demo;
 
+// Why is this not an enum?
 public class Genre {
 	
 	static final int Action = 0;
