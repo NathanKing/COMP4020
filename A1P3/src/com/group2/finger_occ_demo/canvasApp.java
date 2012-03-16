@@ -13,6 +13,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.SurfaceView;
@@ -161,7 +162,11 @@ public class canvasApp extends Activity implements OnItemSelectedListener {
 	
 	public void login(View view){
 		
-		//do your login stuff here
+		Intent intent = new Intent(this, UserActivity.class);
+		
+		startActivityForResult(intent, 0);
+		
+		
 		
 	}
     
