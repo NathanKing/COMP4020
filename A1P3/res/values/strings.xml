@@ -39,6 +39,14 @@
   		<item>9</item>
     </string-array>
     
-    
+    <string name="UserNameTextBox">Username:</string>
+    <string name="PasswordTextBox">Password:</string>
+    <string name="SignUpText">Sign Up</string>
+    <string name="LogInText">Log In</string>
+    <string name="BackButton">Back</string>
+    <string name="AddButton">Add</string>
+    <string name="FriendsTextView">Friends</string>
+    <string name="MyRatingsTextView">My Ratings</string>
+    <string name="ShareButton">Share</string>
     
 </resources>
