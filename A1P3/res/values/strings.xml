@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, A1Activity!</string>
+    <string name="app_name">A3</string>
+    <string name="loadMsg">Loading Data...</string>
+    
+    <string name="genre_prompt">Choose a Genre</string>
+    <string-array name="genre_array">
+        <item>All</item>
+        <item>Action</item>
+        <item>Comedy</item>
+        <item>Drama</item>
+        <item>Family</item>
+        <item>Fantasy</item>
+        <item>Horror</item>
+        <item>Music</item>
+        <item>Mystery</item>
+        <item>Romance</item>
+        <item>Sci-Fi</item>
+        <item>Short</item>
+        <item>Thriller</item>
+        <item>War</item>
+        <item>Western</item>
+    </string-array>
+    
+    <string name="rating_prompt">Select a Rating</string>
+    <string-array name="rating_array">
+        <item>All</item>
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+  		<item>5</item>
+  		<item>6</item>
+  		<item>7</item>
+  		<item>8</item>
+  		<item>9</item>
+    </string-array>
+    
+    <string name="UserNameTextBox">Username:</string>
+    <string name="PasswordTextBox">Password:</string>
+    <string name="SignUpText">Sign Up</string>
+    <string name="LogInText">Log In</string>
+    <string name="BackButton">Back</string>
+    <string name="AddButton">Add</string>
+    <string name="FriendsTextView">Friends</string>
+    <string name="MyRatingsTextView">My Ratings</string>
+    <string name="ShareButton">Share</string>
+    <string name="AddFavourite">+ Favourites</string>
+    <string name="Rating">Rating:</string>
+    <string name="Back">Back</string>
+    
+    
+    <string name="movieViewTitle">title</string>
+    <string name="movieViewYear">year</string>
+    <string name="movieViewLength">length</string>
+    <string name="movieViewCertification">certification</string>
+    <string name="movieViewDirector">director</string>
+    <string name="movieViewRating">rating</string>
+    <string-array name="movieViewGenres">
+        <item>genres</item>
+    </string-array>
+    <string-array name="movieViewActors">
+        <item>actors</item>
+    </string-array>
+    
+    <string name="movieViewDirectorDesc">From Director:</string>
+    <string name="movieViewActorsDesc">Starring:</string>
+    <string name="movieViewGenresDesc">Genres:</string>
+    
+</resources>
