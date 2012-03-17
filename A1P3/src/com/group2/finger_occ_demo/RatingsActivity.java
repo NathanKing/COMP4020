@@ -2,14 +2,11 @@ package com.group2.finger_occ_demo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -57,7 +54,7 @@ public class RatingsActivity extends Activity{
 		{
 			HashMap<String, String> item = new HashMap<String, String>();
 			item.put("title", ratings.get(i).getTitle());
-			item.put("rating", ratings.get(i).getScore() + "/5");
+			item.put("rating", ratings.get(i).getScore() + "/10");
 			list.add(item);
 		}
 		

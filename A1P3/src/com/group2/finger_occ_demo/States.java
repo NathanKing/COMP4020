@@ -1,8 +1,5 @@
 package com.group2.finger_occ_demo;
 
-import java.awt.*;
-
-import android.view.DragEvent;
 import android.view.MotionEvent;
 
 class States
@@ -147,11 +144,5 @@ class States
 		}
 		
 		return inputMachine(one, two);
-	}
-
-	public static void massageEvent(DragEvent event)
-	{
-		Point2D one = new Point2D(event.getX(), event.getY());
-		Point2D two = 
 	}
 }
