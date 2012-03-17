@@ -1,5 +1,6 @@
 package com.group2.finger_occ_demo;
 
+import android.util.Log;
 import android.view.MotionEvent;
 
 class States
@@ -15,20 +16,20 @@ class States
 	}
 	
 	public static final int SWIPE_DISTANCE =   10;	// How many pixels do we have to move to initiate a move
-	public static final int HOVER_TIMEOUT  =  300;	// How many milliseconds before detecting hover
-	public static final int SELECT_TIMEOUT = 1000;	// How long without moving before item should be selected
+	public static final int HOVER_TIMEOUT  = 1000;	// How many milliseconds before detecting hover
+	public static final int SELECT_TIMEOUT = 2000;	// How long without moving before item should be selected
 	public static final int SELECT_MOVE    =   10;  // How many pixels does it take to reset the select timeout
 	
 	// Used by other functions
-	static Point2D screen_offset;
-	static double zoom;
+	static Point2D screen_offset = new Point2D(0,0);
+	static double zoom = 0;
 	
 	// Used only in inputMachine
-	static FingerStates fs; 
-	static double oldDistance;
-	static long oldTimestamp;
-	static long stateStart;		// How long have we been in the current mode
-	static Point2D old;			// Old position
+	static FingerStates fs = FingerStates.IDLE; 
+	static double oldDistance = 0;
+	static long oldTimestamp  = 0;
+	static long stateStart    = 0;	// How long have we been in the current mode
+	static Point2D old;				// Old position
 	static FingerStates inputMachine(Point2D one, Point2D two)
 	{
 		double distance;
@@ -86,8 +87,11 @@ class States
 			case RESIZE:
 				// Revert back to swipe if we lost the second finger
 				if (two == null)
+				{
 					fs = FingerStates.SWIPE;
-				
+					break;
+				}
+					
 				// We have a decent sample
 				if (oldDistance != 0)
 				{
@@ -117,7 +121,7 @@ class States
 					stateStart = System.currentTimeMillis();
 				
 				// If the user hovers without moving, consider something selected
-				if (System.currentTimeMillis() > stateStart + SELECT_MOVE)
+				if (System.currentTimeMillis() > stateStart + SELECT_TIMEOUT)
 					fs = FingerStates.SELECT;
 				
 				break;
@@ -127,6 +131,7 @@ class States
 				break;
 		}
 		
+		Log.w("State", fs.toString() + " start:" + stateStart + " time:" + System.currentTimeMillis());
 		
 		oldTimestamp = timestamp;
 		old = one;
@@ -142,6 +147,9 @@ class States
 		{
 			two = new Point2D(e.getX(1), e.getY(1));
 		}
+		
+    	if ((e.getActionMasked() & (MotionEvent.ACTION_POINTER_1_UP)) == 0)
+    		one = null;
 		
 		return inputMachine(one, two);
 	}

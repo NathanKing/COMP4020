@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Canvas;
+import android.view.ActionMode;
 import android.view.Display;
 import android.view.DragEvent;
 import android.view.MotionEvent;
