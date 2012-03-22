@@ -49,13 +49,13 @@ public class MovieActivity extends Activity {
     	
     	list = "";
     	for (String actor : movie.getActors())
-    		list += actor + ",";
-    	((TextView)findViewById(R.id.TextView05)).setText(list.substring(0, list.length()-1));
+    		list += actor + ", ";
+    	((TextView)findViewById(R.id.TextView05)).setText(list.substring(0, list.length()-2));
     			
 		list = "";
     	for (String genre : movie.getGenre())
-    		list += genre + ",";
-    	((TextView)findViewById(R.id.TextView04)).setText(list.substring(0, list.length()-1));
+    		list += genre + ", ";
+    	((TextView)findViewById(R.id.TextView04)).setText(list.substring(0, list.length()-2));
     			
     	((RatingBar)findViewById(R.id.ratingBar1)).setRating(movie.getRating());
     }

@@ -49,7 +49,7 @@
     <string name="MyRatingsTextView">My Ratings</string>
     <string name="ShareButton">Share</string>
     <string name="AddFavourite">+ Favourites</string>
-    <string name="Rating">Rating:</string>
+    <string name="Rating">Rating: </string>
     <string name="Back">Back</string>
     
     

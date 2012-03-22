@@ -30,8 +30,8 @@ public final class R {
         public static final int SignUpButton=0x7f06000d;
         public static final int TextView01=0x7f060019;
         public static final int TextView03=0x7f06001e;
-        public static final int TextView04=0x7f060020;
-        public static final int TextView05=0x7f06001f;
+        public static final int TextView04=0x7f06001f;
+        public static final int TextView05=0x7f06001d;
         public static final int UserNameText=0x7f060008;
         public static final int UserNameTextBox=0x7f06000b;
         public static final int UserNameTextView=0x7f060022;
@@ -45,16 +45,16 @@ public final class R {
         public static final int listView1=0x7f060005;
         public static final int login=0x7f060013;
         public static final int progressBar1=0x7f060014;
-        public static final int ratingBar1=0x7f060016;
+        public static final int ratingBar1=0x7f060020;
         public static final int ratings=0x7f060011;
         public static final int ratingsView=0x7f060021;
         public static final int relativeLayout1=0x7f060007;
-        public static final int textView1=0x7f060017;
+        public static final int textView1=0x7f060018;
         public static final int textView2=0x7f06001a;
-        public static final int textView3=0x7f060018;
-        public static final int textView4=0x7f06001c;
+        public static final int textView3=0x7f060017;
+        public static final int textView4=0x7f060016;
         public static final int textView5=0x7f06001b;
-        public static final int textView6=0x7f06001d;
+        public static final int textView6=0x7f06001c;
     }
     public static final class layout {
         public static final int friendslayout=0x7f030000;

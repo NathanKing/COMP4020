@@ -7,8 +7,6 @@ import java.util.List;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.RectShape;
 import android.view.View;
 
 import com.group2.finger_occ_demo.data.Movie;
@@ -20,10 +18,11 @@ import com.group2.finger_occ_demo.data.Movie;
 public class Points {
 	private int[] rect_size = {20, 20};
 	private ArrayList<Square_Shape> squares;
-	private ArrayList<ShapeDrawable> testSquares;
 	private int radiusPX;// From the center of a shape
-	private int availableWidth;
-	private int availableHeight;
+	private float xStart;
+	private float yStart;
+	private float availableWidth;
+	private float availableHeight;
 	
 	private int[] xRange;
 	private int[] yRange;
@@ -34,13 +33,15 @@ public class Points {
 	 * Responsible for all shapes in a given box. Note order of list is the way of doing
 	 * z-indexing.
 	 */
-	public Points(int screenWidth, int screenHeight, int[] xRange, int[] yRange){
+	public Points(float xStart, float yStart, float screenWidth, float screenHeight, int[] xRange, int[] yRange){
 		xOffset = 0;
 		yOffset = 0;
 		
 		// Get the available width and ranges
 		this.availableWidth = screenWidth;
 		this.availableHeight = screenHeight;
+		this.xStart = xStart;
+		this.yStart = yStart;
 		this.xRange = xRange;
 		this.yRange = yRange;
 		
@@ -52,9 +53,8 @@ public class Points {
 		radiusPX = rect_size[0] * 4;
 		
 		squares = new ArrayList<Square_Shape>();
-		testSquares = new ArrayList<ShapeDrawable>();
-		//init_from_data();
-		init_from_data();
+		
+		init_from_data(null);
 	}
 	
 	/**
@@ -63,29 +63,26 @@ public class Points {
 	 * where n is the maximum graph value for the axis, n is the maximum value
 	 * for the data points i.e. for rating 10, and r is the current value of the point.
 	 */
-	public void init_from_data(){
+	public void init_from_data(List<Movie> movies){
 		float x;
 		float y;
 		int color = Color.GREEN;
-		List<Movie> movies = canvasApp.data.getMovie();
+		if (movies == null)
+			movies = canvasApp.data.getMovie();
+		float heightInc = availableHeight/(yRange[1] - yRange[0]);
+		float widthInc = availableWidth/(xRange[1] - xRange[0]);
 		for (Movie movie : movies){
-			x = (float) ( (availableWidth/(xRange[1] - xRange[0]) * movie.getYear1900()) + xOffset);
-			y = (float) ( (availableHeight - ((availableHeight/(yRange[1] - yRange[0]) * movie.getRating())) ) + yOffset);//invert the ratings so 0 is at the bottom
+			x = (float) ( (widthInc * movie.getYear1900()) + xOffset + xStart);
+			y = (float) ( ((availableHeight + yStart) - (heightInc * movie.getRating())) + yOffset);//invert the ratings so 0 is at the bottom
 			
 			color = getColor(movie.getGenre().get(0));
 
-			squares.add(new Square_Shape(movie, x, y, rect_size, color));
-			
-			testSquares.add(new ShapeDrawable(new RectShape()));
+			squares.add(new Square_Shape(movie, x + rect_size[0]/2, y - rect_size[1]/2, rect_size, color));// the minus size centers a shape on a tick line
 		}
 	}
 	
 	public void filter_points(String genre, String rating){
-		squares = new ArrayList<Square_Shape>();
-		testSquares = new ArrayList<ShapeDrawable>();
-		float x;
-		float y;
-		int color = Color.GREEN;
+		squares.clear();
 		List<Movie> movies;
 		
 		if(genre.equals("All") && rating.equals("All")){
@@ -117,15 +114,7 @@ public class Points {
 			}
 		}
 		
-		for (Movie movie : movies){
-			x = (float) ( (availableWidth/(xRange[1] - xRange[0]) * movie.getYear1900()) + xOffset);
-			y = (float) ( (availableHeight - ((availableHeight/(yRange[1] - yRange[0]) * movie.getRating())) ) + yOffset);//invert the ratings so 0 is at the bottom
-			
-			color = getColor(movie.getGenre().get(0));
-			squares.add(new Square_Shape(movie, x, y, rect_size, color));
-			testSquares.add(new ShapeDrawable(new RectShape()));
-		}
-		
+		init_from_data(movies);
 	}
 	
 	/**
