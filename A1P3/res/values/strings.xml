@@ -69,5 +69,6 @@
     <string name="movieViewDirectorDesc">From Director:</string>
     <string name="movieViewActorsDesc">Starring:</string>
     <string name="movieViewGenresDesc">Genres:</string>
+    <string name="SearchButton">Search</string>
     
 </resources>

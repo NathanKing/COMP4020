@@ -16,10 +16,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
 
@@ -29,7 +33,7 @@ import com.group2.finger_occ_demo.data.Movie;
 /**
  * Initializes Canvas and starts application.
  */
-public class canvasApp extends Activity implements OnItemSelectedListener {
+public class canvasApp extends Activity implements OnItemSelectedListener, OnClickListener {
 	
 	public static DataObjects data;
 	public static List<String> directors = new ArrayList<String>();
@@ -78,12 +82,16 @@ public class canvasApp extends Activity implements OnItemSelectedListener {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ratings.setAdapter(adapter);
         
+        Button search = (Button) findViewById(R.id.button1);
+        
+        
         
         // Create a new canvas set it as the view and give it focus. Also give it
         // the data created from the json file.
 		canvasView = new MyCanvas(this);
 		canvasView.setBackgroundColor(Color.WHITE);
 		
+		search.setOnClickListener(this);
 		dirs.setOnItemSelectedListener(this);
 		genres.setOnItemSelectedListener(this);
 		ratings.setOnItemSelectedListener(this);
@@ -157,6 +165,21 @@ public class canvasApp extends Activity implements OnItemSelectedListener {
 		
 		
 		
+	}
+
+	@Override
+	public void onClick(View v) {
+		Spinner genres = (Spinner)findViewById(R.id.genres);
+		Spinner ratings = (Spinner)findViewById(R.id.ratings);
+		EditText searchText = (EditText)findViewById(R.id.searchText);
+		
+		String text = searchText.getText().toString();
+		String genre = genres.getSelectedItem().toString(); 
+		String rating = ratings.getSelectedItem().toString();
+		
+		//Search should respect filters that are already selected. We only ever search visible Movies.
+		canvasView.scatterView.points.filter_points(text, genre, rating);
+		canvasView.invalidate();
 	}
     
 }

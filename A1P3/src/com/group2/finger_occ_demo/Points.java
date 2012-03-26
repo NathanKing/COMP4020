@@ -1,6 +1,7 @@
 package com.group2.finger_occ_demo;
 
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -116,6 +117,54 @@ public class Points {
 		
 		init_from_data(movies);
 	}
+	
+	public void filter_points(String text, String genre, String rating)
+	{
+		text = text.trim();
+		
+		if(text.length() > 0)
+		{
+			squares.clear();
+			List<Movie> movies;
+			
+			movies = new ArrayList<Movie>();
+			
+			for(Movie movie : canvasApp.data.getMovie()){
+				
+				String g = movie.getGenre().get(0);
+				int r = movie.getRating();
+				
+				if(genre.equals("All") && rating.equals("All")){
+					if(Pattern.compile(Pattern.quote(text), Pattern.CASE_INSENSITIVE).matcher(movie.getTitle()).find())
+					{
+						movies.add(movie);
+					}
+				}
+				else
+				if(genre.equals("All")){
+					if(r==Integer.valueOf(rating) && Pattern.compile(Pattern.quote(text), Pattern.CASE_INSENSITIVE).matcher(movie.getTitle()).find()){
+						movies.add(movie);
+					}
+				}
+				
+				else if(rating.equals("All")){
+					if(g.equals(genre) && Pattern.compile(Pattern.quote(text), Pattern.CASE_INSENSITIVE).matcher(movie.getTitle()).find()){
+						movies.add(movie);
+					}
+				}
+				
+				else if(g.equals(genre) && r==Integer.valueOf(rating)){
+					if(Pattern.compile(Pattern.quote(text), Pattern.CASE_INSENSITIVE).matcher(movie.getTitle()).find())
+					{
+						movies.add(movie);
+					}
+				}
+			}
+		
+		init_from_data(movies);
+		}
+	}
+
 	
 	/**
 	 * Draw all shapes visible on the sent canvas. Due to ordering shapes in the same position end up in the
