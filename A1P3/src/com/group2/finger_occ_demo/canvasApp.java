@@ -49,6 +49,8 @@ public class canvasApp extends Activity implements OnItemSelectedListener, OnCli
     	
     	MyCanvas.movieFound = MyCanvas.moviesFound.get(resultCode);
     	startActivity(new Intent(this, MovieActivity.class));
+    	
+    	
     }
     
 	
