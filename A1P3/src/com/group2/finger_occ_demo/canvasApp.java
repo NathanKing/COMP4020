@@ -42,15 +42,15 @@ public class canvasApp extends Activity implements OnItemSelectedListener, OnCli
 	
 	private MyCanvas canvasView;
 	
-	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data){
-    	
-    	System.out.println(resultCode);
-    	
-    	MyCanvas.movieFound = MyCanvas.moviesFound.get(resultCode);
-    	startActivity(new Intent(this, MovieActivity.class));
-    	
-    	
+		System.out.println(requestCode + ":" + resultCode);
+    	if (requestCode == 0){
+    		MyCanvas.movieFound = MyCanvas.moviesFound.get(resultCode);
+    		startActivityForResult(new Intent(this, MovieActivity.class), MyCanvas.MOVIE_VIEW_PROCESS);
+    	}
+    	// need to reload the points because one could have changed
+    	else
+    		canvasView.onActivityResult(requestCode, resultCode, data);
     }
     
 	
@@ -112,6 +112,7 @@ public class canvasApp extends Activity implements OnItemSelectedListener, OnCli
 		
 		frame.addView(canvasView);
     }
+
     
     @Override
     public void onBackPressed(){

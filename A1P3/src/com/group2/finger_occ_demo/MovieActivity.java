@@ -104,7 +104,6 @@ public class MovieActivity extends Activity {
      */
     private void saveMovieInfo(){
     	// Extract title and year
-    	System.out.println(titleText.getText().toString().split("\\(")[0]);
     	String title = titleText.getText().toString().split("\\(")[0].trim();
     	String yearS = titleText.getText().toString().split("\\(")[1].replaceAll("\\)","").replaceAll(" ","");
     	int year = -1;

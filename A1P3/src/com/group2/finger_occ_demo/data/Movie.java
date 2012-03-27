@@ -2,6 +2,7 @@ package com.group2.finger_occ_demo.data;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**

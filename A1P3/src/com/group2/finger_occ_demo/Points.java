@@ -65,6 +65,7 @@ public class Points {
 	 * (n/m) * r = x or y position,
 	 * where n is the maximum graph value for the axis, n is the maximum value
 	 * for the data points i.e. for rating 10, and r is the current value of the point.
+	 * If movies is null the default movie list is loaded.
 	 */
 	public void init_from_data(List<Movie> movies){
 		float x;
@@ -74,6 +75,8 @@ public class Points {
 			movies = canvasApp.data.getMovie();
 		float heightInc = availableHeight/(yRange[1] - yRange[0]);
 		float widthInc = availableWidth/(xRange[1] - xRange[0]);
+		
+		squares = new ArrayList<Square_Shape>();
 		for (Movie movie : movies){
 			x = (float) ( (widthInc * movie.getYear1900()) + xOffset + xStart);
 			y = (float) ( ((availableHeight + yStart) - (heightInc * movie.getRating())) + yOffset);//invert the ratings so 0 is at the bottom

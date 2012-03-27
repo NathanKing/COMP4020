@@ -22,6 +22,7 @@ import com.group2.finger_occ_demo.data.Movie;
 
 public class MyCanvas extends View implements OnTouchListener, OnDragListener
 {	
+	public static final int MOVIE_VIEW_PROCESS = 1;
 	public static Movie movieFound;//no time so must use a movie found class var
 	public static ArrayList<Movie> moviesFound;
 	ScatterPlotView scatterView;
@@ -63,18 +64,15 @@ public class MyCanvas extends View implements OnTouchListener, OnDragListener
     	
     	// Open the Movie View Display
     	if (movies!=null){
-    		if(movies.size()==1){
-    			
-    			context.startActivity(new Intent(context, MovieActivity.class));
-        		// TODO Change later
-        		movieFound = movies.get(0);
+    		if(movies.size() == 1){
+        		movieFound = movies.get(0);// TODO Change later
+    			context.startActivityForResult(new Intent(context, MovieActivity.class), MOVIE_VIEW_PROCESS);
     		}
     		else if(movies.size()>1){
+    			System.out.println("here");
     			
     			moviesFound = movies;
     			context.startActivityForResult(new Intent(context, MovieSelectActivity.class), 0);
-    			
-    			
     		}
     	}
 
@@ -84,6 +82,14 @@ public class MyCanvas extends View implements OnTouchListener, OnDragListener
         return true;   
     }
     
+    
+    /**
+     * Handle any callbacks from views
+     */
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == MOVIE_VIEW_PROCESS)
+        	scatterView.resetPoints(canvasApp.data.getMovie());
+    }
     
     /**
      * Sends onDrag to each view.

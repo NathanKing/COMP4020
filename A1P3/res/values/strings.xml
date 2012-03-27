@@ -53,22 +53,19 @@
     <string name="Back">Back</string>
     
     
-    <string name="movieViewTitle">title</string>
+    <string name="movieViewTitle">title (year e.g. 1900)</string>
     <string name="movieViewYear">year</string>
     <string name="movieViewLength">length</string>
     <string name="movieViewCertification">certification</string>
-    <string name="movieViewDirector">director</string>
+    <string name="movieViewDirector">director name</string>
     <string name="movieViewRating">rating</string>
-    <string-array name="movieViewGenres">
-        <item>genres</item>
-    </string-array>
-    <string-array name="movieViewActors">
-        <item>actors</item>
-    </string-array>
     
     <string name="movieViewDirectorDesc">From Director:</string>
     <string name="movieViewActorsDesc">Starring:</string>
-    <string name="movieViewGenresDesc">Genres:</string>
     <string name="SearchButton">Search</string>
+    <string name="movieViewGenresDesc">Genres:</string>
+    <string name="movieViewGenres">genre1, genre2, genre3</string>
+    <string name="movieViewActors">actor name1, actor name2, actor name3</string>
+    <string name="Save">Save</string>
     
 </resources>

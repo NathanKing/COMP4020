@@ -1,7 +1,7 @@
 package com.group2.finger_occ_demo;
 
 import java.util.ArrayList;
-
+import java.util.List;
 import com.group2.finger_occ_demo.data.Movie;
 
 import android.graphics.Canvas;
@@ -65,32 +65,21 @@ public class ScatterPlotView {
 		    	
 		if(event.getAction() == MotionEvent.ACTION_MOVE){
 			points.inShapeSquares((int)event.getX(), (int)event.getY());
-			
-			//points.translateSquares(0, -10, sqs);
-		
-			
-    		//System.out.println("Scatterplotview.onTouch: movies size " + movies.size());
-    		
 		}
 		
     	if(event.getAction() == MotionEvent.ACTION_UP ){
     		// See if finger is in any of the objects
     		movies = points.inShape((int)event.getX(), (int)event.getY());
-    		
-    		
-    		
+
     		// Make all objects normal sized
     		points.goDefaultSize();
     		for(Square_Shape sq:points.sqs){
-    			
     			sq.translate(0, 10);
     		}
     		
     		points.sqs.clear();
     			
     		view.invalidate();
-    		
-    		
     	}
     	    	
     	return movies;
@@ -125,6 +114,13 @@ public class ScatterPlotView {
 		this.yOffset = 0;
 		
 		points.resetPosition();
+	}
+	
+	/**
+	 * Resets and restores all points in the scatterplot
+	 */
+	public void resetPoints(List<Movie> movies){
+		points.init_from_data(movies);
 	}
 	
 	/*
