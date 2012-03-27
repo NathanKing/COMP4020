@@ -1,5 +1,7 @@
 package com.group2.finger_occ_demo;
 
+import java.util.ArrayList;
+
 import com.group2.finger_occ_demo.data.Movie;
 
 import android.graphics.Canvas;
@@ -55,23 +57,43 @@ public class ScatterPlotView {
 	 * Returns any alert message text.
 	 * @param view 
 	 */
-	public Movie onTouch(MotionEvent event, View view) {
-		Movie shape = null;
+	public ArrayList<Movie> onTouch(MotionEvent event, View view) {
+		ArrayList<Movie> movies = null;
 		
 		// check if finger is in radius to resize any objects (want to make objects bigger on touch and drag)
 		points.checkRadius((int)event.getX(), (int)event.getY(), view);
-    	
+		    	
+		if(event.getAction() == MotionEvent.ACTION_MOVE){
+			points.inShapeSquares((int)event.getX(), (int)event.getY());
+			
+			//points.translateSquares(0, -10, sqs);
+		
+			
+    		//System.out.println("Scatterplotview.onTouch: movies size " + movies.size());
+    		
+		}
+		
     	if(event.getAction() == MotionEvent.ACTION_UP ){
     		// See if finger is in any of the objects
-    		shape = points.inShape((int)event.getX(), (int)event.getY());
+    		movies = points.inShape((int)event.getX(), (int)event.getY());
+    		
+    		
     		
     		// Make all objects normal sized
     		points.goDefaultSize();
+    		for(Square_Shape sq:points.sqs){
+    			
+    			sq.translate(0, 10);
+    		}
     		
+    		points.sqs.clear();
+    			
     		view.invalidate();
+    		
+    		
     	}
-    	
-    	return shape;
+    	    	
+    	return movies;
 	}
 	
 	/**

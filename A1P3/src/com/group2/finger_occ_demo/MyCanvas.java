@@ -1,5 +1,7 @@
 package com.group2.finger_occ_demo;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -21,6 +23,7 @@ import com.group2.finger_occ_demo.data.Movie;
 public class MyCanvas extends View implements OnTouchListener, OnDragListener
 {	
 	public static Movie movieFound;//no time so must use a movie found class var
+	public static ArrayList<Movie> moviesFound;
 	ScatterPlotView scatterView;
 	Display display;
 	int screenWidth;
@@ -53,13 +56,26 @@ public class MyCanvas extends View implements OnTouchListener, OnDragListener
 	 */
     public boolean onTouch(View view, MotionEvent event) {
     	// Run through views
-    	Movie foundMovie = scatterView.onTouch(event, view);
+    	
+    	ArrayList<Movie> movies = null;
+    	int result = 0;
+    	movies = scatterView.onTouch(event, view);
     	
     	// Open the Movie View Display
-    	if (foundMovie != null){
-    		context.startActivity(new Intent(context, MovieActivity.class));
-    		// TODO Change later
-    		movieFound = foundMovie;
+    	if (movies!=null){
+    		if(movies.size()==1){
+    			
+    			context.startActivity(new Intent(context, MovieActivity.class));
+        		// TODO Change later
+        		movieFound = movies.get(0);
+    		}
+    		else if(movies.size()>1){
+    			
+    			moviesFound = movies;
+    			context.startActivityForResult(new Intent(context, MovieSelectActivity.class), 0);
+    			
+    			
+    		}
     	}
 
     	// Feed the state machine
@@ -67,6 +83,7 @@ public class MyCanvas extends View implements OnTouchListener, OnDragListener
     	
         return true;   
     }
+    
     
     /**
      * Sends onDrag to each view.

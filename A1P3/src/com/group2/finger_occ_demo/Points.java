@@ -29,6 +29,8 @@ public class Points {
 	private int[] yRange;
 	private int xOffset;
 	private int yOffset;
+	
+	public ArrayList<Square_Shape> sqs = new ArrayList<Square_Shape>();
 		
 	/**
 	 * Responsible for all shapes in a given box. Note order of list is the way of doing
@@ -190,16 +192,73 @@ public class Points {
 	/**
 	 * If in any drawn shape on the canvas is under the finger and is the biggest.
 	 */
-	public Movie inShape(int x, int y){
+	public ArrayList<Movie> inShape(int x, int y){
 		int[] position = {x, y};
+		
+		ArrayList<Movie> movies = new ArrayList<Movie>();
 		
 		// See if in any of the shapes, backwards loop because current biggest
 		// objects are in the end of the array list. Only retrieves object if drawn.
-		for (int i = squares.size() - 1; i > 0; i--)
-			if (squares.get(i).inShape(position) == true && squares.get(i).isDrawn())
-				return squares.get(i).getMovie();
 		
-		return null;
+		
+		for (int i = squares.size() - 1; i > 0; i--){
+			
+			//System.out.println(squares.get(i).getMovie().getTitle());
+
+			if (squares.get(i).inShape(position) == true){
+				
+				if(squares.get(i).isDrawn()){
+					movies.add(squares.get(i).getMovie());
+					System.out.println(squares.get(i).getMovie().getTitle());
+
+					return movies;
+				}
+				else{
+					
+					//squares.get(i).translate(0, 0 +20);
+					movies.add(squares.get(i).getMovie());
+					System.out.println(squares.get(i).getMovie().getTitle());
+
+				}
+				
+
+			}
+		}
+		
+		return movies;
+	}
+	
+	public void inShapeSquares(int x, int y){
+		int[] position = {x, y};
+		
+		int xint = 0;
+		int yint = 0;
+		
+		System.out.println("Event: action move");
+		
+		
+		// See if in any of the shapes, backwards loop because current biggest
+		// objects are in the end of the array list. Only retrieves object if drawn.
+		for (int i = squares.size() - 1; i > 0; i--){
+			
+			//System.out.println(squares.get(i).getMovie().getTitle());
+
+			if (squares.get(i).inShape(position) == true){
+				
+				if(squares.get(i).isDrawn()){
+					System.out.println(squares.get(i).getMovie().getTitle());
+					//sqs.add(squares.get(i));
+					//System.out.println(squares.get(i).getMovie().getTitle());
+
+				}
+				else{
+					System.out.println(squares.get(i).getMovie().getTitle());
+					squares.get(i).translate(xint, yint -10);
+					sqs.add(squares.get(i));
+					//System.out.println(squares.get(i).getMovie().getTitle());
+				}
+			}
+		}
 	}
 	
 	/**
@@ -251,6 +310,14 @@ public class Points {
 	/*
 	 * Getters and setters
 	 */
+	
+	public void translateSquares(int xOffset, int yOffset, ArrayList<Square_Shape> sqs){
+		
+		for(Square_Shape sq:sqs)
+			
+			sq.translate(xOffset, yOffset);
+	}
+	
 	public void translate(int xOffset, int yOffset){
 		this.xOffset = xOffset;
 		this.yOffset = yOffset;

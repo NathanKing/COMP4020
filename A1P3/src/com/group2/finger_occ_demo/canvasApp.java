@@ -42,6 +42,16 @@ public class canvasApp extends Activity implements OnItemSelectedListener, OnCli
 	
 	private MyCanvas canvasView;
 	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data){
+    	
+    	System.out.println(resultCode);
+    	
+    	MyCanvas.movieFound = MyCanvas.moviesFound.get(resultCode);
+    	startActivity(new Intent(this, MovieActivity.class));
+    }
+    
+	
     /** Called when the activity is first created.. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
