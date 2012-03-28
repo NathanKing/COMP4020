@@ -213,6 +213,10 @@ public class Points {
 		
 		init_from_data(movies);
 		}
+		else
+		{
+			init_from_data(canvasApp.data.getMovie());
+		}
 	}
 
 	
