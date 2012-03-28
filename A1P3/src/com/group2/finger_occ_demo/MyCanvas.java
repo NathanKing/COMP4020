@@ -2,10 +2,8 @@ package com.group2.finger_occ_demo;
 
 import java.util.ArrayList;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.view.Display;
@@ -23,7 +21,8 @@ import com.group2.finger_occ_demo.data.Movie;
 public class MyCanvas extends View implements OnTouchListener, OnDragListener
 {	
 	public static final int MOVIE_VIEW_PROCESS = 1;
-	public static Movie movieFound;//no time so must use a movie found class var
+	public static final int MOVIE_SELECT_PROCESS = 2;
+	public static Movie movieFound;
 	public static ArrayList<Movie> moviesFound;
 	ScatterPlotView scatterView;
 	Display display;
@@ -72,7 +71,7 @@ public class MyCanvas extends View implements OnTouchListener, OnDragListener
     			System.out.println("here");
     			
     			moviesFound = movies;
-    			context.startActivityForResult(new Intent(context, MovieSelectActivity.class), 0);
+    			context.startActivityForResult(new Intent(context, MovieSelectActivity.class), MOVIE_SELECT_PROCESS);
     		}
     	}
 
@@ -87,7 +86,7 @@ public class MyCanvas extends View implements OnTouchListener, OnDragListener
      * Handle any callbacks from views
      */
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == MOVIE_VIEW_PROCESS)
+        if (requestCode == MOVIE_VIEW_PROCESS || requestCode == 0)
         	scatterView.resetPoints(canvasApp.data.getMovie());
     }
     
@@ -111,13 +110,5 @@ public class MyCanvas extends View implements OnTouchListener, OnDragListener
 		
 		// Create each view
 		scatterView = new ScatterPlotView(screenWidth, screenHeight);
-		
-		//Create alert dialog with default message and OK button
-		mainDialog = new AlertDialog.Builder(this.getContext()).create();
-		mainDialog.setTitle("Object Selected:");
-		mainDialog.setMessage("[Object]");
-		mainDialog.setButton("OK", new DialogInterface.OnClickListener() {
-		   public void onClick(DialogInterface dialog, int which) {}
-		});
 	}
 }

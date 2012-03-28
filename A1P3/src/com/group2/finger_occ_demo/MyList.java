@@ -10,6 +10,9 @@ public class MyList implements Serializable {
 	private Object type;
 	private ArrayList<String> list;
 	
+	// For Jackson JSON
+	public MyList(){}
+	
 	public MyList(String title, Object type)
 	{
 		this.title = title;

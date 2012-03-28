@@ -1,10 +1,12 @@
-package com.group2.finger_occ_demo;
+package com.group2.finger_occ_demo.io;
 
 import java.io.IOException;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
+
+import com.group2.finger_occ_demo.Users;
 import com.group2.finger_occ_demo.data.DataObjects;
 
 import android.content.Context;
@@ -24,13 +26,23 @@ public class DataObjectCreator {
 	}
 	
 	/**
-	 * Creates all objects from the specified file and returns them.
+	 * Creates all movie objects from the specified file and returns them.
 	 */
-	public DataObjects createObjects(String fileName){
-        return fromJackson(fileName);
+	public DataObjects createMovieObjects(String fileName){
+		return (DataObjects) createObjects(fileName, DataObjects.class);
 	}
 	
-	public DataObjects fromJackson(String fileName){
+	/**
+	 * Creates all user objects from the specified file and returns them.
+	 */
+	public Users createUserObjects(String fileName){
+		return (Users) createObjects(fileName, Users.class);
+	}
+	
+	/**
+	 * Creates all objects from the specified file and returns them.
+	 */
+	public Object createObjects(String fileName, Class c){
 		ReadFile file;
 		ObjectMapper mapper = new ObjectMapper();//For Jackson JSON
 		mapper.getDeserializationConfig().without(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES);//handles getter/setter with no corresponding variable
@@ -39,7 +51,10 @@ public class DataObjectCreator {
         file = new ReadFile(assets, context);
 
         try {
-			return mapper.readValue(file.get(fileName), DataObjects.class);
+        	String contents = file.get(fileName);
+        	if (contents == null)
+        		return null;
+			return mapper.readValue(contents, c);
 		} catch (JsonParseException e) {
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
@@ -50,17 +65,4 @@ public class DataObjectCreator {
         
         return null;
 	}
-	
-	/*
-	public DataObjects fromGson(String fileName){
-		ReadFile file;
-		String fileContents;
-		Gson gson = new Gson();
-		
-		// Read in Files
-        file = new ReadFile(assets, context);
-        fileContents = file.get(fileName);
-
-        return gson.fromJson(fileContents, DataObjects.class);
-	}*/
 }

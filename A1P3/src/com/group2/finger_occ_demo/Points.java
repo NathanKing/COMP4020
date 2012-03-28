@@ -65,7 +65,10 @@ public class Points {
 	 * (n/m) * r = x or y position,
 	 * where n is the maximum graph value for the axis, n is the maximum value
 	 * for the data points i.e. for rating 10, and r is the current value of the point.
-	 * If movies is null the default movie list is loaded.
+	 * 
+	 * Note1: If movies is null the default movie list is loaded.
+	 * Note2: If the current user possesses a movie with the same title that is current that
+	 * 		  movie is used instead for the point.
 	 */
 	public void init_from_data(List<Movie> movies){
 		float x;
@@ -78,12 +81,33 @@ public class Points {
 		
 		squares = new ArrayList<Square_Shape>();
 		for (Movie movie : movies){
-			x = (float) ( (widthInc * movie.getYear1900()) + xOffset + xStart);
-			y = (float) ( ((availableHeight + yStart) - (heightInc * movie.getRating())) + yOffset);//invert the ratings so 0 is at the bottom
+			// See if the current user has a modified version of the current movie
+			Movie toUse = checkCurUser(movie);
 			
-			color = getColor(movie.getGenre().get(0));
-
-			squares.add(new Square_Shape(movie, x + rect_size[0]/2, y - rect_size[1]/2, rect_size, color));// the minus size centers a shape on a tick line
+			x = (float) ( (widthInc * toUse.getYear1900()) + xOffset + xStart);
+			y = (float) ( ((availableHeight + yStart) - (heightInc * toUse.getRating())) + yOffset);//invert the ratings so 0 is at the bottom
+			
+			color = getColor(toUse.getGenre().get(0));
+				
+			squares.add(new Square_Shape(toUse, x + rect_size[0]/2, y - rect_size[1]/2, rect_size, color));// the minus size centers a shape on a tick line
+		}
+	}
+	
+	/**
+	 * Checks if the current user has a movie if not returns the movie
+	 * checking for if so returns users modified version of movie.
+	 */
+	private Movie checkCurUser(Movie movie){
+		User curUser = canvasApp.users.currentUser();
+		
+		if (curUser == null)
+			return movie;
+		else{
+			Movie userMovie = curUser.tryGetMovie(movie.getTitle());
+			if (userMovie == null)
+				return movie;
+			else
+				return userMovie;
 		}
 	}
 	

@@ -29,6 +29,8 @@ import android.widget.Spinner;
 
 import com.group2.finger_occ_demo.data.DataObjects;
 import com.group2.finger_occ_demo.data.Movie;
+import com.group2.finger_occ_demo.io.DataObjectCreator;
+import com.group2.finger_occ_demo.io.SaveData;
 
 /**
  * Initializes Canvas and starts application.
@@ -37,14 +39,16 @@ public class canvasApp extends Activity implements OnItemSelectedListener, OnCli
 	
 	public static DataObjects data;
 	public static List<String> directors = new ArrayList<String>();
+	public static Users users;
+	
 	//Application Constants
-	private final String FILE_NAME = "movies.json";
+	private final String MOVIE_FILE_NAME = "movies.json";
+	private final String USERS_FILE_NAME = "users.json";
 	
 	private MyCanvas canvasView;
 	
 	protected void onActivityResult(int requestCode, int resultCode, Intent data){
-		System.out.println(requestCode + ":" + resultCode);
-    	if (requestCode == 0){
+    	if (requestCode == MyCanvas.MOVIE_SELECT_PROCESS){
     		MyCanvas.movieFound = MyCanvas.moviesFound.get(resultCode);
     		startActivityForResult(new Intent(this, MovieActivity.class), MyCanvas.MOVIE_VIEW_PROCESS);
     	}
@@ -65,7 +69,10 @@ public class canvasApp extends Activity implements OnItemSelectedListener, OnCli
         setContentView(R.layout.main);
         
         // Get the data from the JSON file
-        data = creator.createObjects(FILE_NAME);
+        data = creator.createMovieObjects(MOVIE_FILE_NAME);
+        users = creator.createUserObjects(USERS_FILE_NAME);
+        if (users == null)
+        	users = new Users();
 
         //create directors list
         for(Movie m:data.getMovie()){
@@ -96,8 +103,6 @@ public class canvasApp extends Activity implements OnItemSelectedListener, OnCli
         
         Button search = (Button) findViewById(R.id.button1);
         
-        
-        
         // Create a new canvas set it as the view and give it focus. Also give it
         // the data created from the json file.
 		canvasView = new MyCanvas(this);
@@ -113,28 +118,12 @@ public class canvasApp extends Activity implements OnItemSelectedListener, OnCli
 		frame.addView(canvasView);
     }
 
-    
-    @Override
+    /**
+     * Save all data so persistence is maintained.
+     */
     public void onBackPressed(){
-    	ObjectMapper mapper = new ObjectMapper();//For Jackson JSON
-        FileOutputStream testFile = null;
-        
-		try {
-			testFile = getBaseContext().openFileOutput(FILE_NAME, Context.MODE_WORLD_READABLE);
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-		}
-        
-        try {
-			mapper.writeValue(testFile, data);
-		} catch (JsonGenerationException e) {
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-    	
+    	SaveData save = new SaveData(getBaseContext());
+    	save.save(MOVIE_FILE_NAME, data, USERS_FILE_NAME, users);
     	this.finish();
     }
     
@@ -171,13 +160,9 @@ public class canvasApp extends Activity implements OnItemSelectedListener, OnCli
 	
 	
 	public void login(View view){
-		
 		Intent intent = new Intent(this, UserActivity.class);
 		
 		startActivityForResult(intent, 0);
-		
-		
-		
 	}
 
 	@Override

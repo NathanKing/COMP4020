@@ -1,5 +1,7 @@
 package com.group2.finger_occ_demo;
 
+import com.group2.finger_occ_demo.data.Movie;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,10 +11,6 @@ import android.widget.EditText;
 
 public class UserActivity extends Activity {
     /** Called when the activity is first created. */
-
-	
-	User currUser;
-	
 	Button logInButton;
 	EditText userNameTextBox;
 	Button signUpButton;
@@ -23,37 +21,45 @@ public class UserActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.loginlayout);
         
+        //Test users
+		System.out.println("---Users are---");
+		for (User user : canvasApp.users.getUsers()){
+			System.out.println(user.getUserName() + "---:");
+			for (Movie movie : user.getMovies())
+				System.out.println(movie.getTitle());
+		}
+        
         logInButton = (Button)findViewById(R.id.LogInButton);
         signUpButton = (Button)findViewById(R.id.SignUpButton);
         
         userNameTextBox = (EditText)findViewById(R.id.UserNameTextBox);
         passwordTextBox = (EditText)findViewById(R.id.PasswordTextBox);
         
+        /**
+         *  Going to just create a user in login instead of signup.
+         *  */
         logInButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				currUser = new User(userNameTextBox.getText().toString(), passwordTextBox.getText().toString());
+				// Generate the user and add to the list of users
+				canvasApp.users.loginUser(userNameTextBox.getText() + "", passwordTextBox.getText() + "");
+				User currUser = canvasApp.users.currentUser();
 				
-				//fake User stuff
-				MyList afakeList = new MyList("Fake List", String.class);
-				afakeList.addToList("test");
-				currUser.addList(afakeList);
-				currUser.addFriend("Fake Friend 1");
-				currUser.addFriend("Fake friend 2");
-				
-				currUser.addRating(new Rating("Some Like it Hoth",4));
-				//fake User Stuff
-				
-				
-				Bundle b = new Bundle();
-				
-				b.putSerializable("User", currUser);
-				
-				Intent myIntent = new Intent(v.getContext(), MainUserList.class);
-				myIntent.putExtras(b);
-				
-                startActivityForResult(myIntent, 0);
+				// If the user was logged in, only case where this does not happen is logout which is implicit.
+				if (currUser != null){
+					//fake User stuff
+					currUser.addFriend("Fake Friend 1");
+					currUser.addFriend("Fake friend 2");
+					
+					Bundle b = new Bundle();
+					
+					b.putSerializable("User", currUser);
+					
+					Intent myIntent = new Intent(v.getContext(), MainUserList.class);
+					myIntent.putExtras(b);
+					
+	                startActivityForResult(myIntent, 0);
+				}
             }
 			
 		});

@@ -83,7 +83,7 @@ public class MainUserList extends Activity {
 	 
 	 private String[] GetMainList()
 	 {
-		 ArrayList<String> list = currUser.getTitleOfLists();
+		 ArrayList<String> list = currUser.makeTitleOfLists();
 		 
 		 String[] array = new String[list.size()];
 		 

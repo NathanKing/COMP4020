@@ -1,4 +1,4 @@
-package com.group2.finger_occ_demo;
+package com.group2.finger_occ_demo.io;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -25,7 +25,8 @@ public class ReadFile {
 	
 	/**
 	 * Returns a string of the file read. First tries assets then if not there
-	 * (this is then a fresh load), then go to internal memory.
+	 * (this is then a fresh load), then go to internal memory. Returns nothing
+	 * if there was no file.
 	 */
 	public String get(String fileName){
 		String data = tryInternal(fileName);
@@ -35,11 +36,9 @@ public class ReadFile {
         try{
         	return IOUtils.toString(assets.open(fileName), "UTF-8");
         }
-        catch (Exception e){
-            Log.e("FileRead Error: ", e.toString());
-        }
+        catch (Exception e){}
         
-        return "Error: error should be caught before here";
+        return null;
 	}
 
 	/**

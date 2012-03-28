@@ -7,6 +7,9 @@ public class Rating implements Serializable {
 	private String title;
 	private int score;
 	
+	// For Jackson JSON
+	public Rating(){}
+	
 	public Rating(String title, int score)
 	{
 		this.title = title;

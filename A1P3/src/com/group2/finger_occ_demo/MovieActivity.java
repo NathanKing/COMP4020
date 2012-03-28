@@ -100,9 +100,16 @@ public class MovieActivity extends Activity {
     }
     
     /**
-     * Save all info store in the current text fields.
+     * Save all info store in the current text fields for the users movie list if there is a user. Otherwise
+     * store all information globally.
      */
     private void saveMovieInfo(){
+    	Movie userMovie;
+    	if (canvasApp.users.currentUser() == null)
+    		userMovie = movieFound;
+    	else
+    		userMovie = new Movie();
+    	
     	// Extract title and year
     	String title = titleText.getText().toString().split("\\(")[0].trim();
     	String yearS = titleText.getText().toString().split("\\(")[1].replaceAll("\\)","").replaceAll(" ","");
@@ -133,13 +140,16 @@ public class MovieActivity extends Activity {
     	catch (NumberFormatException e){}
     	
     	// Save top text fields
-    	movieFound.setDirector(directorText.getText() + "");
-    	movieFound.setTitle(title);
-    	movieFound.setYear(year);
-    	movieFound.setCertification(certificationText.getText() + "");
-    	movieFound.setLength(lengthText.getText() + "");
-    	movieFound.setActors(actorsL);
-    	movieFound.setGenre(genresL);
-    	movieFound.setRating((int) ratingBar.getRating());
+    	userMovie.setDirector(directorText.getText() + "");
+    	userMovie.setTitle(title);
+    	userMovie.setYear(year);
+    	userMovie.setCertification(certificationText.getText() + "");
+    	userMovie.setLength(lengthText.getText() + "");
+    	userMovie.setActors(actorsL);
+    	userMovie.setGenre(genresL);
+    	userMovie.setRating((int) ratingBar.getRating());
+    	
+    	if (canvasApp.users.currentUser() != null)
+    		canvasApp.users.currentUser().addMovie(userMovie);
     }
 }

@@ -55,7 +55,6 @@ public class ScatterPlotView {
 	/**
 	 * Handles touching on the scatter plot. Make sure the event is sent in.
 	 * Returns any alert message text.
-	 * @param view 
 	 */
 	public ArrayList<Movie> onTouch(MotionEvent event, View view) {
 		ArrayList<Movie> movies = null;
