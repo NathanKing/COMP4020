@@ -75,13 +75,14 @@
             android:layout_alignBottom="@+id/login"
             android:layout_toRightOf="@+id/textView1"
             android:text="@string/SearchButton" />
-
+
         <EditText
             android:id="@+id/searchText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/button1"
-            android:layout_toRightOf="@+id/button1" >
+            android:layout_toRightOf="@+id/button1"
+            android:inputType="text" >
 
             <requestFocus />
         </EditText>

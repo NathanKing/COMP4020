@@ -131,7 +131,8 @@ class States
 				break;
 		}
 		
-		Log.w("State", fs.toString() + " start:" + stateStart + " time:" + System.currentTimeMillis());
+		//Log.w("State", fs.toString() + " start:" + stateStart + " time:" + System.currentTimeMillis());
+		//Log.w("Values", "Zoom: " + Double.toString(zoom) + " Offset: " + screen_offset.toString());
 		
 		oldTimestamp = timestamp;
 		old = one;
