@@ -35,7 +35,7 @@ public class ListActivity extends Activity{
         currUser = (User)b.getSerializable("User");
         listName = (String)b.getSerializable("ListName");
         
-        adapter = new ArrayAdapter<String>(ListActivity.this, android.R.layout.simple_list_item_1, android.R.id.text1, currUser.getList(listName));
+        adapter = new ArrayAdapter<String>(ListActivity.this, android.R.layout.simple_list_item_1, android.R.id.text1);
         list.setAdapter(adapter);
         
         listNameTextView.setText((CharSequence) listName);

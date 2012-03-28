@@ -56,12 +56,12 @@ public class MainUserList extends Activity {
 		                startActivityForResult(myIntent, 0);
 					}
 					else
-					if(itemSelected == "My Ratings")
+					if(itemSelected == "Favorites")
 					{
 						Bundle b = new Bundle();
 						b.putSerializable("User", currUser);
 						
-						Intent myIntent = new Intent(arg1.getContext(), RatingsActivity.class);
+						Intent myIntent = new Intent(arg1.getContext(), FavouritesActivity.class);
 						myIntent.putExtras(b);
 						
 		                startActivityForResult(myIntent, 0);

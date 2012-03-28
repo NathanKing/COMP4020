@@ -11,8 +11,7 @@ public class User implements Serializable{
 	private String userName;
 	private String password;
 	private ArrayList<String> friends;
-	private ArrayList<MyList> lists;
-	private ArrayList<Rating> ratings;
+	private ArrayList<String> favourites;
 	
 	// This will store any user customized movies
 	private ArrayList<Movie> movies;
@@ -25,13 +24,8 @@ public class User implements Serializable{
 		userName = n;
 		password = p;
 		friends = new ArrayList<String>();
-		ratings = new ArrayList<Rating>();
+		favourites = new ArrayList<String>();
 		movies = new ArrayList<Movie>();
-	}
-	
-	public ArrayList<Rating> getRatings()
-	{
-		return ratings;
 	}
 	
 	public String getUserName()
@@ -44,35 +38,9 @@ public class User implements Serializable{
 		return password;
 	}
 	
-	public ArrayList<String> getList(String name)
-	{
-		ArrayList<String> list = new ArrayList<String>();
-		
-		for(int i = 0; i < lists.size(); i++)
-		{
-			if(lists.get(i).getTitle().equals(name))
-			{
-				list = lists.get(i).getList();
-				break; 
-			}
-		}
-		
-		return list;
-	}
-	
-	public void addRating(Rating rating)
-	{
-		//check if we've already rated this movie. If so then just update the existing score.
-		for(int i = 0; i < ratings.size(); i++)
-		{
-			if(ratings.get(i).getTitle().equals(rating.getTitle()))
-			{
-				ratings.get(i).setScore(rating.getScore());
-				break;
-			}
-		}
-		
-		ratings.add(rating);
+	public void addFavourite(String favourite){
+		if (!favourites.contains(favourite))
+			favourites.add(favourite);
 	}
 	
 	// JF Recoded, added awesome.
@@ -109,7 +77,7 @@ public class User implements Serializable{
 	 */
 	public Movie tryGetMovie(String title){
 		for (Movie movie : movies){
-			if(movie.getTitle().equalsIgnoreCase(title))
+			if(movie.getTitle().equalsIgnoreCase(title.trim()))
 				return movie;
 		}
 		
@@ -125,9 +93,13 @@ public class User implements Serializable{
 	public ArrayList<String> makeTitleOfLists(){
 		ArrayList<String> titles = new ArrayList<String>();
 		titles.add("Friends");
-		titles.add("My Ratings");
+		titles.add("Favorites");
 
 		return titles;
+	}
+	
+	public ArrayList<String> getFavourites(){
+		return favourites;
 	}
 	
 	public ArrayList<String> getFriends(){

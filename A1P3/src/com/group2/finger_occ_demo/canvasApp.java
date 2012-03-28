@@ -48,6 +48,13 @@ public class canvasApp extends Activity implements OnItemSelectedListener, OnCli
 	private MyCanvas canvasView;
 	
 	protected void onActivityResult(int requestCode, int resultCode, Intent data){
+		//set login button to correct value
+		Button login = (Button) findViewById(R.id.login);
+		if (users.currentUser() == null)
+			login.setText("Login");
+		else
+			login.setText("Profile");
+		
     	if (requestCode == MyCanvas.MOVIE_SELECT_PROCESS){
     		MyCanvas.movieFound = MyCanvas.moviesFound.get(resultCode);
     		startActivityForResult(new Intent(this, MovieActivity.class), MyCanvas.MOVIE_VIEW_PROCESS);

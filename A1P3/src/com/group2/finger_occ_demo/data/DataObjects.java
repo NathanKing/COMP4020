@@ -55,4 +55,18 @@ public class DataObjects implements Serializable{
 		
 		return highestRating;
 	}
+	
+	/**
+	 * Gets the movie with the title. If no movie exists with the title then null
+	 * is returned.
+	 * Note: Due to Jackson JSON cannot be named getMovie().
+	 */
+	public Movie tryGetMovie(String title){
+		for (Movie movie : movies){
+			if(movie.getTitle().equalsIgnoreCase(title.trim()))
+				return movie;
+		}
+		
+		return null;
+	}
 }

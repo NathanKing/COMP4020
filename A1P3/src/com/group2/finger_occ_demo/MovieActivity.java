@@ -21,8 +21,9 @@ public class MovieActivity extends Activity {
 	private Movie movieFound;
 	
 	// Buttons
-	private Button backButton;
+	private Button favoriteButton;
 	private Button saveButton;
+	private Button backButton;
 	
 	// Editable Fields
 	private EditText titleText;
@@ -43,13 +44,12 @@ public class MovieActivity extends Activity {
         movieFound = MyCanvas.movieFound;
         setMovieInfo();
         
-        // Back button returns to main screen in default state
-        backButton = (Button)findViewById(R.id.backButton);
-        backButton.setOnClickListener(new View.OnClickListener() {
+        // Favorites button just adds string of movie to favorites which is later indexed
+        favoriteButton = (Button)findViewById(R.id.favouritesButton);
+        favoriteButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				finish();
+				saveFavourite();
             }
-			
 		});
         
         // Save button currently changes the entry based on the currently set fields
@@ -58,6 +58,15 @@ public class MovieActivity extends Activity {
 			public void onClick(View v) {
 				saveMovieInfo();
             }
+		});
+        
+        // Back button returns to main screen in default state
+        backButton = (Button)findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				finish();
+            }
+			
 		});
     }
     
@@ -151,5 +160,9 @@ public class MovieActivity extends Activity {
     	
     	if (canvasApp.users.currentUser() != null)
     		canvasApp.users.currentUser().addMovie(userMovie);
+    }
+    
+    public void saveFavourite(){
+    	canvasApp.users.currentUser().addFavourite(movieFound.getTitle());
     }
 }

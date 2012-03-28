@@ -25,7 +25,6 @@ public class SaveData {
 	 */
 	public void save(String movieName, DataObjects movieData, String usersName, Users userData){
 		saveFile(movieName, movieData);
-		System.out.println("Got here");
 		saveFile(usersName, userData);
 	}
 	

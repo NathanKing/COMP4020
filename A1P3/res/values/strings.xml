@@ -46,9 +46,9 @@
     <string name="BackButton">Back</string>
     <string name="AddButton">Add</string>
     <string name="FriendsTextView">Friends</string>
-    <string name="MyRatingsTextView">My Ratings</string>
+    <string name="MyRatingsTextView">My Favorites</string>
     <string name="ShareButton">Share</string>
-    <string name="AddFavourite">+ Favourites</string>
+    <string name="AddFavourite">+ Favorites</string>
     <string name="Rating">Rating: </string>
     <string name="Back">Back</string>
     
