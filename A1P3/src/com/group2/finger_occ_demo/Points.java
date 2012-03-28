@@ -212,7 +212,7 @@ public class Points {
 				
 				if(squares.get(i).isDrawn()){
 					movies.add(squares.get(i).getMovie());
-					System.out.println(squares.get(i).getMovie().getTitle());
+					//System.out.println(squares.get(i).getMovie().getTitle());
 
 					return movies;
 				}
@@ -220,7 +220,7 @@ public class Points {
 					
 					//squares.get(i).translate(0, 0 +20);
 					movies.add(squares.get(i).getMovie());
-					System.out.println(squares.get(i).getMovie().getTitle());
+					//System.out.println(squares.get(i).getMovie().getTitle());
 
 				}
 				
@@ -237,7 +237,7 @@ public class Points {
 		int xint = 0;
 		int yint = 0;
 		
-		System.out.println("Event: action move");
+		//System.out.println("Event: action move");
 		
 		
 		// See if in any of the shapes, backwards loop because current biggest
@@ -249,13 +249,13 @@ public class Points {
 			if (squares.get(i).inShape(position) == true){
 				
 				if(squares.get(i).isDrawn()){
-					System.out.println(squares.get(i).getMovie().getTitle());
+					//System.out.println(squares.get(i).getMovie().getTitle());
 					//sqs.add(squares.get(i));
 					//System.out.println(squares.get(i).getMovie().getTitle());
 
 				}
 				else{
-					System.out.println(squares.get(i).getMovie().getTitle());
+					//System.out.println(squares.get(i).getMovie().getTitle());
 					squares.get(i).translate(xint, yint -10);
 					sqs.add(squares.get(i));
 					//System.out.println(squares.get(i).getMovie().getTitle());
