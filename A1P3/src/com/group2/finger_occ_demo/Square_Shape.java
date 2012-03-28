@@ -5,6 +5,7 @@ import com.group2.finger_occ_demo.data.Movie;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 
 /**
  * Tracks square size, location and color. Resizes square when in radius by in how much
@@ -20,11 +21,16 @@ public class Square_Shape {
 	Paint color;
 	Paint borderColor;
 	private double resizeBy;//Computed factor to scale object by
-	private boolean drawn = false;
+	
+	private boolean stale;				// Do we need to update these rects when we draw?
+	private Rect shape = new Rect();
+	private Rect border = new Rect();
 	
 	// constants
 	final private int BORDER = 2;//in pixels
-	final private double resizeF = 0.02;//Constant to resize by {2 for device}
+	final private double resizeF = 0.05;//Constant to resize by {2 for device}
+	
+	static final int OFFSET_Y = 10;	
 	
 	// levels to display progressive info.
 	final private double TEXT_APPEAR = 1.3;//times
@@ -36,6 +42,8 @@ public class Square_Shape {
 		this.y = (int) y;
 		this.size = size;
 		this.resizeBy = 0;
+		
+		this.stale = true;
 		
 		color = new Paint();
 		color.setColor(colorNum);
@@ -50,14 +58,34 @@ public class Square_Shape {
 	 * a black border.
 	 */
 	public void draw(Canvas on){
-		int expandByX = (int) (size[0] * resizeBy);
-		int expandByY = (int) (size[1] * resizeBy);
-		on.drawRect(x - expandByX, y - expandByY, x + size[0] + expandByX, y + size[1] + expandByY, borderColor);
-		on.drawRect(x - expandByX + BORDER, y - expandByY + BORDER, x + size[0] + expandByX - BORDER, y + size[1] + expandByY - BORDER, color);
+		if (stale)
+		{
+			int expandByX = (int) (size[0] * resizeBy);
+			int expandByY = (int) (size[1] * resizeBy);
+			
+			// Offset slightly above finger
+			int offsetY  = (int) (-10 * resizeBy);
+			
+			shape.top    = y - expandByY + offsetY;
+			shape.bottom = y + size[1] + expandByY + offsetY;
+			shape.left   = x - expandByX;
+			shape.right  = x + size[0] + expandByX;
+			
+			border.set(shape);
+			border.top	+= BORDER;
+			border.bottom -= BORDER;
+			border.left	+= BORDER;
+			border.right  -= BORDER;
+			
+			stale = false;
+		}
+		
+		on.drawRect(shape, borderColor);
+		on.drawRect(border, color);
 		
 		// Decide on when to display extra data
 		if (resizeBy > TEXT_APPEAR)
-			on.drawText(movie.getTitle(), x - expandByX + 3 + BORDER, y - expandByY + 10 + BORDER, new Paint(Color.BLACK));
+			on.drawText(movie.getTitle(), border.left + 3, border.top + 10, borderColor);
 	}
 	
 	/**
@@ -75,47 +103,30 @@ public class Square_Shape {
 	 * @return Whether the finger was in the current shapes radius
 	 */
 	public boolean checkRadius(int circle_x, int circle_y, int radius){
-		// All points for the current square
-		int[][] points = {{x, y}, 
-						  {x + size[0], y},
-						  {x, y + size[1]},
-						  {x + size[0], y + size[1]}};
+		// Center of square
+		int x = this.shape.centerX();
+		int y = this.shape.centerY();
+
+		int f = Math.abs(circle_x - x);
+		int e = Math.abs(circle_y - y);
+		double vector = Math.sqrt(Math.pow(f, 2) + Math.pow(e, 2));
 		
-		// Loop though all points checking if the vector from the circle to the square
-		// is longer than the circle radius (no intersection) and by how much.
-		int f;
-		int e;
-		double vector;
-		double maxDiff = -1;
-		int point = 0;
-		do {
-			f = Math.abs(circle_x - points[point][0]);
-			e = Math.abs(circle_y - points[point][1]);
-			vector = Math.sqrt(Math.pow(f, 2) + Math.pow(e, 2));
-			
-			if (radius - vector > maxDiff)
-				maxDiff = radius - vector;
-			
-			point++;
-		} while (point < points.length);
-		
-		// resize square if circle was in radius, and return that it was resized.
-		if (maxDiff != 0){
-			resizeBy = maxDiff * resizeF;
-			return true;
+		if (radius - vector > 0)
+		{
+			resizeBy = (radius - vector) * resizeF;
+			stale = true;
 		}
-		return false;
-	}
+		else
+			setDefaultSize();
 	
-	public void translate(int xOffset, int yOffset){
-		this.x += xOffset;
-		this.y += yOffset;
+		return false;
 	}
 	
 	/**
 	 * Set resizeBy to 1 making the shapes size normal.
 	 */
 	public void setDefaultSize(){
+		stale = true;
 		resizeBy = 0;
 	}
 	
@@ -123,8 +134,8 @@ public class Square_Shape {
 	 * Reset square to the position it originally displayed in.
 	 */
 	public void resetPosition() {
-		x = xDefault;
-		y = yDefault;
+		this.setX(xDefault);
+		this.setY(yDefault);
 	}
 	
 	/*
@@ -136,6 +147,10 @@ public class Square_Shape {
 	 */
 	public int getSize(){
 		return (int) (size[0] * (resizeBy));
+	}
+	
+	public double resizeValue(){
+		return resizeBy;
 	}
 	
 	/**
@@ -152,6 +167,10 @@ public class Square_Shape {
 	}
 
 	public void setX(int x) {
+		if (this.x == x)
+			return;
+		
+		stale = true;
 		this.x = x;
 	}
 	
@@ -160,6 +179,10 @@ public class Square_Shape {
 	}
 
 	public void setY(int y) {
+		if (this.y == y)
+			return;
+		
+		stale = true;
 		this.y = y;
 	}
 	
@@ -170,13 +193,4 @@ public class Square_Shape {
 	public void setMovie(Movie movie) {
 		this.movie = movie;
 	}
-
-	public boolean isDrawn() {
-		return drawn;
-	}
-
-	public void setDrawn(boolean drawn) {
-		this.drawn = drawn;
-	}
-
 }

@@ -63,7 +63,7 @@ public class MyCanvas extends View implements OnTouchListener, OnDragListener
     	}
 
     	// Feed the state machine
-    	States.massageEvent(event);
+    	//States.massageEvent(event);
     	
         return true;   
     }

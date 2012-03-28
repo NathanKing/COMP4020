@@ -30,16 +30,13 @@ public class Points {
 	private int xOffset;
 	private int yOffset;
 	
-	public ArrayList<Square_Shape> sqs = new ArrayList<Square_Shape>();
-		
+	private Comparator<Square_Shape> sizeSorter;
+	
 	/**
 	 * Responsible for all shapes in a given box. Note order of list is the way of doing
 	 * z-indexing.
 	 */
 	public Points(float xStart, float yStart, float screenWidth, float screenHeight, int[] xRange, int[] yRange){
-		xOffset = 0;
-		yOffset = 0;
-		
 		// Get the available width and ranges
 		this.availableWidth = screenWidth;
 		this.availableHeight = screenHeight;
@@ -58,6 +55,12 @@ public class Points {
 		squares = new ArrayList<Square_Shape>();
 		
 		init_from_data(null);
+		
+		sizeSorter = new Comparator<Square_Shape>(){
+			public int compare(Square_Shape sqr1, Square_Shape sqr2) {
+				return (int)sqr1.resizeValue() - (int)sqr2.resizeValue();
+			}
+		};
 	}
 	
 	/**
@@ -226,17 +229,17 @@ public class Points {
 	 * the current shape to drawable.
 	 */
 	public void drawShapes(Canvas on){
-		Square_Shape square;
-		int[] prevXY = {-1,-1};// should not be on screen, meaning first shape is always drawn
+		Point2D p = new Point2D(-1, -1);
 		
-		for (int i = 0; i < squares.size(); i++){
-			square =  squares.get(i);
-			square.setDrawn(false);
-			if ( !(square.getX() == prevXY[0] && square.getY() == prevXY[1])){
+		// This works because everything is z-ordered
+		for (Square_Shape square : squares){
+			if ( square.getX() == p.x && square.getY() == p.y){
+				// Do nothing
+			}
+			else{
 				square.draw(on);
-				prevXY[0] = square.getX();
-				prevXY[1] = square.getY();
-				square.setDrawn(true);
+				p.x = square.getX();
+				p.y = square.getY();
 			}
 		}
 	}
@@ -245,72 +248,33 @@ public class Points {
 	 * If in any drawn shape on the canvas is under the finger and is the biggest.
 	 */
 	public ArrayList<Movie> inShape(int x, int y){
+		Square_Shape square;
 		int[] position = {x, y};
 		
 		ArrayList<Movie> movies = new ArrayList<Movie>();
 		
+		// Grab the largest movies currently selected
 		// See if in any of the shapes, backwards loop because current biggest
-		// objects are in the end of the array list. Only retrieves object if drawn.
+		// objects are in the end of the array list.
 		
+		double largest = squares.get(squares.size() - 1).resizeValue();
+
+		// If none can be considered selected
+		if (largest == 0)
+			return movies;
 		
 		for (int i = squares.size() - 1; i > 0; i--){
-			
-			//System.out.println(squares.get(i).getMovie().getTitle());
-
-			if (squares.get(i).inShape(position) == true){
-				
-				if(squares.get(i).isDrawn()){
-					movies.add(squares.get(i).getMovie());
-					//System.out.println(squares.get(i).getMovie().getTitle());
-
-					return movies;
-				}
-				else{
-					
-					//squares.get(i).translate(0, 0 +20);
-					movies.add(squares.get(i).getMovie());
-					//System.out.println(squares.get(i).getMovie().getTitle());
-
-				}
-				
-
+			square = squares.get(i);
+			if (square.inShape(position) == true){
+				movies.add(square.getMovie());
 			}
+			
+			// Give up on anything smaller than what's selected
+			if (square.resizeValue() < largest)
+				break;
 		}
 		
 		return movies;
-	}
-	
-	public void inShapeSquares(int x, int y){
-		int[] position = {x, y};
-		
-		int xint = 0;
-		int yint = 0;
-		
-		//System.out.println("Event: action move");
-		
-		
-		// See if in any of the shapes, backwards loop because current biggest
-		// objects are in the end of the array list. Only retrieves object if drawn.
-		for (int i = squares.size() - 1; i > 0; i--){
-			
-			//System.out.println(squares.get(i).getMovie().getTitle());
-
-			if (squares.get(i).inShape(position) == true){
-				
-				if(squares.get(i).isDrawn()){
-					//System.out.println(squares.get(i).getMovie().getTitle());
-					//sqs.add(squares.get(i));
-					//System.out.println(squares.get(i).getMovie().getTitle());
-
-				}
-				else{
-					//System.out.println(squares.get(i).getMovie().getTitle());
-					squares.get(i).translate(xint, yint -10);
-					sqs.add(squares.get(i));
-					//System.out.println(squares.get(i).getMovie().getTitle());
-				}
-			}
-		}
 	}
 	
 	/**
@@ -318,21 +282,14 @@ public class Points {
 	 * that will need to be redrawn. The biggest objects are put in front.
 	 */
 	public void checkRadius(int x, int y, View view){
-		Square_Shape square;
-		int largeRadius = (int) (radiusPX * 1.5);
-		
-		for (int i = 0; i < squares.size(); i++){
-			square = squares.get(i);
-			// if a square is double the distance away don't bother calculating it. This is a rough approximation keep in mind.
-			if ( (square.getX() > x - largeRadius && square.getX() < x + largeRadius) &&
-				 (square.getY() > y - largeRadius && square.getY() < y + largeRadius))
+		for (Square_Shape square : squares){
 				square.checkRadius(x, y, radiusPX);		
 		}		
 		
 		reorderZ();
 		
 		// invalidate only this rectangle.
-		view.invalidate(x - largeRadius, y - largeRadius, x + largeRadius, y + largeRadius);
+		view.invalidate();
 	}
 	
 	/**
@@ -341,14 +298,7 @@ public class Points {
 	 * overlapping other elements.
 	 */
 	private void reorderZ(){
-		Collections.sort(squares, new Comparator<Object>(){
-			public int compare(Object obj1, Object obj2) {
-				Square_Shape sqr1 = (Square_Shape)obj1;
-				Square_Shape sqr2 = (Square_Shape)obj2;
-				
-				return sqr1.getSize() - sqr2.getSize();
-			}
-        });
+		Collections.sort(squares, sizeSorter);
 	}
 	
 	/**
@@ -362,21 +312,6 @@ public class Points {
 	/*
 	 * Getters and setters
 	 */
-	
-	public void translateSquares(int xOffset, int yOffset, ArrayList<Square_Shape> sqs){
-		
-		for(Square_Shape sq:sqs)
-			
-			sq.translate(xOffset, yOffset);
-	}
-	
-	public void translate(int xOffset, int yOffset){
-		this.xOffset = xOffset;
-		this.yOffset = yOffset;
-		
-		for (Square_Shape square : squares)
-			square.translate(xOffset, yOffset);
-	}
 	
 	public void resetPosition(){
 		this.xOffset = 0;

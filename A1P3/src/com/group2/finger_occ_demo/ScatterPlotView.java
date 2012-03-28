@@ -5,7 +5,9 @@ import java.util.List;
 import com.group2.finger_occ_demo.data.Movie;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -30,6 +32,8 @@ public class ScatterPlotView {
 	final private int TICK_LINES_X = 11;
 	final private int TICK_SIZE = 15;//in px
 	
+	final private int POINT_OFFSET = 0;
+	
 	public ScatterPlotView(int screenWidth, int screenHeight){
 		//scatter plot is within 5% of each screen side
 		marginX = (float)(screenWidth * 0.1);
@@ -40,7 +44,7 @@ public class ScatterPlotView {
 		xOffset = 0;
 		yOffset = 0;
 		
-		points = new Points((float)(marginX * 0.5), (float)(marginY * 0.5), sizeX, sizeY, xRange, yRange);
+		points = new Points((float)(marginX * 0.5), (float)(marginY * 0.5) - POINT_OFFSET, sizeX, sizeY, xRange, yRange);
 	}
 	
 	/**
@@ -62,21 +66,9 @@ public class ScatterPlotView {
 		// check if finger is in radius to resize any objects (want to make objects bigger on touch and drag)
 		points.checkRadius((int)event.getX(), (int)event.getY(), view);
 		    	
-		if(event.getAction() == MotionEvent.ACTION_MOVE){
-			points.inShapeSquares((int)event.getX(), (int)event.getY());
-		}
-		
     	if(event.getAction() == MotionEvent.ACTION_UP ){
     		// See if finger is in any of the objects
     		movies = points.inShape((int)event.getX(), (int)event.getY());
-
-    		// Make all objects normal sized
-    		points.goDefaultSize();
-    		for(Square_Shape sq:points.sqs){
-    			sq.translate(0, 10);
-    		}
-    		
-    		points.sqs.clear();
     			
     		view.invalidate();
     	}
@@ -94,16 +86,6 @@ public class ScatterPlotView {
 	/*
 	 * Graph translation and zooming
 	 */
-	
-	/**
-	 * Offsets the CURRENT scatter plot by the given amount.
-	 */
-	public void translatePlot(int xOffset, int yOffset){
-		this.xOffset += xOffset;
-		this.yOffset += yOffset;
-		
-		points.translate(xOffset, yOffset);
-	}
 	
 	/**
 	 * Resets scatter plot. Currently only resets panning.
