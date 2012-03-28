@@ -127,7 +127,7 @@ public class Points {
 	{
 		text = text.trim();
 		
-		if(text.length() > 0)
+		if(text.length() > 1)
 		{
 			squares.clear();
 			List<Movie> movies;
