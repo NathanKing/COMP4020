@@ -2,7 +2,6 @@ package com.group2.finger_occ_demo.data;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -21,6 +20,7 @@ public class Movie implements Serializable{
 	private List<String> genre = new ArrayList<String>();
 	private List<String> actors = new ArrayList<String>();
 	private String actor;
+	private boolean deleted = false;
 	
 	// Need dummy constructor for Jackson
 	public Movie(){}
@@ -105,5 +105,11 @@ public class Movie implements Serializable{
 	}
 	public void setGenre(ArrayList<String> genre) {
 		this.genre = genre;
+	}
+	public boolean isDeleted() {
+		return deleted;
+	}
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
 	}
 }

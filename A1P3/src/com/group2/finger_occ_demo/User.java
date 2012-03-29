@@ -39,8 +39,13 @@ public class User implements Serializable{
 	}
 	
 	public void addFavourite(String favourite){
+		favourite = favourite.trim();
 		if (!favourites.contains(favourite))
 			favourites.add(favourite);
+	}
+	
+	public void removeFavourite(String favourite){
+		favourites.remove(favourite.trim());
 	}
 	
 	// JF Recoded, added awesome.
@@ -50,19 +55,28 @@ public class User implements Serializable{
 	}
 	
 	/**
-	 * Adds to a movie if its name exists otherwise creates a new one.
+	 * Adds to a movie if its name exists (and its not deleted) otherwise creates a new one.
 	 */
 	public void addMovie(Movie movieIn){
 		boolean foundMovie = false;
+		boolean isDeleted = false;
 		int count = 0;
 		for (Movie movie : movies){
-			if(movie.getTitle().equalsIgnoreCase(movieIn.getTitle())){
+			if (movie.getTitle().trim().equalsIgnoreCase(movieIn.getTitle().trim())){
+				if (movie.isDeleted())
+					isDeleted = true;
 				foundMovie = true;
 				break;
 			}
-			count++;
+			
+			count += 1;
 		}
 		
+		//remove movie so it can be added later
+		if (isDeleted == true){
+			movies.remove(count);
+			count -= 1;
+		}
 		
 		if (foundMovie == false)
 			movies.add(movieIn);
@@ -71,17 +85,39 @@ public class User implements Serializable{
 	}
 	
 	/**
-	 * Gets the movie with the title. If no movie exists with the title then null
-	 * is returned.
+	 * Gets the movie with the title. If no movie exists with the title then null is
+	 * returned. Deleted movies are returned.
 	 * Note: Due to Jackson JSON cannot be named getMovie().
 	 */
 	public Movie tryGetMovie(String title){
+		title = title.trim();
 		for (Movie movie : movies){
-			if(movie.getTitle().equalsIgnoreCase(title.trim()))
+			if(movie.getTitle().trim().equalsIgnoreCase(title))
 				return movie;
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * Try to delete the given movie from the users list. If successful also delete
+	 * any corresponding entries in the favourites list. Note the movie will still
+	 * exist in the main list, the user will just be unable to retrieve it.
+	 */
+	public void deleteMovie(String title){
+		Movie movie = tryGetMovie(title);
+		if (movie != null){
+			movie.setDeleted(true);
+			removeFavourite(title);
+		}
+		// create a movie entry that specifies deleted
+		else{
+			movie = new Movie();
+			movie.setTitle(title);
+			movie.setDeleted(true);
+			movies.add(movie);
+			removeFavourite(title);
+		}
 	}
 	
 	public boolean matchPW(String p){

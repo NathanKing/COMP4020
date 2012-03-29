@@ -4,6 +4,7 @@
     android:layout_height="fill_parent"
     android:gravity="left"
     android:orientation="vertical" >
+
     <RelativeLayout
         android:id="@+id/relativeLayout1"
         android:layout_width="match_parent"
@@ -40,6 +41,15 @@
             android:layout_alignBottom="@+id/saveButton"
             android:layout_toLeftOf="@+id/saveButton"
             android:text="@string/AddFavourite" />
+        
+       	<Button
+            android:id="@+id/deleteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignRight="@+id/certificationText"
+            android:text="@string/Delete"
+            android:textColor="@drawable/red_button" />
 
         <!-- Text -->
 
@@ -54,7 +64,7 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textSize="30px" />
 
-        <EditText
+        <TextView
             android:id="@+id/titleText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -62,12 +72,11 @@
             android:layout_below="@+id/textView3"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="0dp"
-            android:inputType="text"
             android:padding="2dp"
             android:text="@string/movieViewTitle"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textSize="50px" />
-
+
         <ProgressBar
             android:id="@+id/progressBar1"
             style="?android:attr/progressBarStyleHorizontal"
@@ -111,10 +120,10 @@
             android:layout_alignLeft="@+id/textView6"
             android:layout_below="@+id/textView6"
             android:inputType="text"
-            android:text="@string/movieViewActors"
-            android:textSize="25dp"
+            android:lines="2"
             android:singleLine="false"
-            android:lines="2" />
+            android:text="@string/movieViewActors"
+            android:textSize="25dp" />
 
         <TextView
             android:id="@+id/TextView03"
@@ -134,10 +143,10 @@
             android:layout_alignLeft="@+id/TextView03"
             android:layout_below="@+id/TextView03"
             android:inputType="text"
-            android:text="@string/movieViewGenres"
-            android:textSize="25dp"
+            android:lines="2"
             android:singleLine="false"
-            android:lines="2" />
+            android:text="@string/movieViewGenres"
+            android:textSize="25dp" />
 
         <EditText
             android:id="@+id/directorText"
@@ -168,7 +177,7 @@
             android:layout_alignTop="@+id/favouritesButton"
             android:layout_toRightOf="@+id/textView1"
             android:numStars="10"
-            android:stepSize="1.0"/>
+            android:stepSize="1.0" />
 
         <EditText
             android:id="@+id/certificationText"
@@ -184,6 +193,41 @@
 
             <requestFocus />
         </EditText>
+
+        <TextView
+            android:id="@+id/TextView02"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView3"
+            android:layout_toRightOf="@+id/titleText"
+            android:text="("
+            android:layout_marginLeft="10dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="50px" />
+
+        <EditText
+            android:id="@+id/yearText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView3"
+            android:layout_toRightOf="@+id/TextView02"
+            android:inputType="text"
+            android:text="@string/movieViewYear"
+            android:padding="2dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="50px" />
+
+        <TextView
+            android:id="@+id/TextView04"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/yearText"
+            android:layout_alignBottom="@+id/yearText"
+            android:layout_toRightOf="@+id/yearText"
+            android:text=")"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="50px" />
+
     </RelativeLayout>
 
 </LinearLayout>

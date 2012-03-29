@@ -1,8 +1,15 @@
-package com.group2.finger_occ_demo;
+package com.group2.finger_occ_demo.activities;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.group2.finger_occ_demo.MyCanvas;
+import com.group2.finger_occ_demo.R;
+import com.group2.finger_occ_demo.User;
+import com.group2.finger_occ_demo.canvasApp;
+import com.group2.finger_occ_demo.R.id;
+import com.group2.finger_occ_demo.R.layout;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -21,9 +28,18 @@ public class FavouritesActivity extends Activity{
 	User currUser;
 	ArrayAdapter<String> adapter;
 	
+	/**
+	 * Handles any returns from screens generated from this screen. Like viewing a movie.
+	 */
+	protected void onActivityResult(int requestCode, int resultCode, Intent data){
+		//Make sure list is updated
+		adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, currUser.getFavourites());
+    	favoritesList.setAdapter(adapter);
+    }
+	
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.ratingslayout);
+        setContentView(R.layout.ratingslayout);//
         
         backButton = (Button)findViewById(R.id.BackButton);
         favoritesList = (ListView)findViewById(R.id.ratingsView);

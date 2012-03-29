@@ -42,7 +42,7 @@
     <string name="UserNameTextBox">Username:</string>
     <string name="PasswordTextBox">Password:</string>
     <string name="SignUpText">Sign Up</string>
-    <string name="LogInText">Log In</string>
+    <string name="LogInText">Log In/Sign Up</string>
     <string name="BackButton">Back</string>
     <string name="AddButton">Add</string>
     <string name="FriendsTextView">Friends</string>
@@ -53,7 +53,7 @@
     <string name="Back">Back</string>
     
     
-    <string name="movieViewTitle">title (year e.g. 1900)</string>
+    <string name="movieViewTitle">title</string>
     <string name="movieViewYear">year</string>
     <string name="movieViewLength">length</string>
     <string name="movieViewCertification">certification</string>
@@ -67,5 +67,8 @@
     <string name="movieViewGenres">genre1, genre2, genre3</string>
     <string name="movieViewActors">actor name1, actor name2, actor name3</string>
     <string name="Save">Save</string>
+    <string name="Logout">Logout</string>
+    <string name="Delete">Delete</string>
+    
     
 </resources>

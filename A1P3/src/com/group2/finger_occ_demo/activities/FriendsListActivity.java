@@ -1,4 +1,10 @@
-package com.group2.finger_occ_demo;
+package com.group2.finger_occ_demo.activities;
+
+import com.group2.finger_occ_demo.MainUserList;
+import com.group2.finger_occ_demo.R;
+import com.group2.finger_occ_demo.User;
+import com.group2.finger_occ_demo.R.id;
+import com.group2.finger_occ_demo.R.layout;
 
 import android.app.Activity;
 import android.app.AlertDialog;

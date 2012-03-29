@@ -1,6 +1,4 @@
-package com.group2.finger_occ_demo;
-
-import com.group2.finger_occ_demo.data.Movie;
+package com.group2.finger_occ_demo.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,33 +7,44 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.group2.finger_occ_demo.MainUserList;
+import com.group2.finger_occ_demo.R;
+import com.group2.finger_occ_demo.User;
+import com.group2.finger_occ_demo.canvasApp;
+
 public class UserActivity extends Activity {
     /** Called when the activity is first created. */
 	Button logInButton;
+	Button backButton;
 	EditText userNameTextBox;
-	Button signUpButton;
 	EditText passwordTextBox;
 	
-    @Override
+	/**
+	 * Handles any returns from screens generated from this screen.
+	 */
+	protected void onActivityResult(int requestCode, int resultCode, Intent data){
+		//Automatically exit screen if login so can skip this
+		if (canvasApp.users.currentUser() != null)
+			finish();
+    }
+	
     public void onCreate(Bundle savedInstanceState) {
     	//If user is logged in don't present login screen
     	super.onCreate(savedInstanceState);
     	if (canvasApp.users.currentUser() == null){
 	        setContentView(R.layout.loginlayout);
 	        
-	        //Test users
-			System.out.println("---Users are---");
-			for (User user : canvasApp.users.getUsers()){
-				System.out.println(user.getUserName() + "---:");
-				for (Movie movie : user.getMovies())
-					System.out.println(movie.getTitle());
-			}
-	        
 	        logInButton = (Button)findViewById(R.id.LogInButton);
-	        signUpButton = (Button)findViewById(R.id.SignUpButton);
 	        
 	        userNameTextBox = (EditText)findViewById(R.id.UserNameTextBox);
 	        passwordTextBox = (EditText)findViewById(R.id.PasswordTextBox);
+	        
+	        backButton = (Button)findViewById(R.id.BackButtonLogin);
+        	backButton.setOnClickListener(new View.OnClickListener() {
+            	public void onClick(View v) {
+            		finish();
+            	}
+            });
 	        
 	        /**
 	         *  Going to just create a user in login instead of signup.

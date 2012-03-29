@@ -78,24 +78,29 @@ public class Points {
 			movies = canvasApp.data.getMovie();
 		float heightInc = availableHeight/(yRange[1] - yRange[0]);
 		float widthInc = availableWidth/(xRange[1] - xRange[0]);
+		Movie toUse;
 		
 		squares = new ArrayList<Square_Shape>();
 		for (Movie movie : movies){
 			// See if the current user has a modified version of the current movie
-			Movie toUse = checkCurUser(movie);
+			toUse = checkCurUser(movie);
 			
-			x = (float) ( (widthInc * toUse.getYear1900()) + xOffset + xStart);
-			y = (float) ( ((availableHeight + yStart) - (heightInc * toUse.getRating())) + yOffset);//invert the ratings so 0 is at the bottom
-			
-			color = getColor(toUse.getGenre().get(0));
+			// Don't draw the square as the user deleted it
+			if (toUse != null){
+				x = (float) ( (widthInc * toUse.getYear1900()) + xOffset + xStart);
+				y = (float) ( ((availableHeight + yStart) - (heightInc * toUse.getRating())) + yOffset);//invert the ratings so 0 is at the bottom
 				
-			squares.add(new Square_Shape(toUse, x + rect_size[0]/2, y - rect_size[1]/2, rect_size, color));// the minus size centers a shape on a tick line
+				color = getColor(toUse.getGenre().get(0));
+					
+				squares.add(new Square_Shape(toUse, x + rect_size[0]/2, y - rect_size[1]/2, rect_size, color));// the minus size centers a shape on a tick line
+			}
 		}
 	}
 	
 	/**
 	 * Checks if the current user has a movie if not returns the movie
-	 * checking for if so returns users modified version of movie.
+	 * checking for if so returns users modified version of movie. Only when
+	 * a user has deleted a movie it is returned as null.
 	 */
 	private Movie checkCurUser(Movie movie){
 		User curUser = canvasApp.users.currentUser();
@@ -106,8 +111,10 @@ public class Points {
 			Movie userMovie = curUser.tryGetMovie(movie.getTitle());
 			if (userMovie == null)
 				return movie;
-			else
+			else if (userMovie.isDeleted() == false)
 				return userMovie;
+			else
+				return null;
 		}
 	}
 	

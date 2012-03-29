@@ -62,8 +62,9 @@ public class DataObjects implements Serializable{
 	 * Note: Due to Jackson JSON cannot be named getMovie().
 	 */
 	public Movie tryGetMovie(String title){
+		title = title.trim();
 		for (Movie movie : movies){
-			if(movie.getTitle().equalsIgnoreCase(title.trim()))
+			if(movie.getTitle().trim().equalsIgnoreCase(title))
 				return movie;
 		}
 		

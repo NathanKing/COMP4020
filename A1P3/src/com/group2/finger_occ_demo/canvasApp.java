@@ -1,22 +1,13 @@
 package com.group2.finger_occ_demo;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
-
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -27,6 +18,8 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
 
+import com.group2.finger_occ_demo.activities.MovieActivity;
+import com.group2.finger_occ_demo.activities.UserActivity;
 import com.group2.finger_occ_demo.data.DataObjects;
 import com.group2.finger_occ_demo.data.Movie;
 import com.group2.finger_occ_demo.io.DataObjectCreator;
@@ -47,6 +40,9 @@ public class canvasApp extends Activity implements OnItemSelectedListener, OnCli
 	
 	private MyCanvas canvasView;
 	
+	/**
+	 * Handles any returns from screens generated from this screen.
+	 */
 	protected void onActivityResult(int requestCode, int resultCode, Intent data){
 		//set login button to correct value
 		Button login = (Button) findViewById(R.id.login);

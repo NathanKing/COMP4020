@@ -1,14 +1,22 @@
-package com.group2.finger_occ_demo;
+package com.group2.finger_occ_demo.activities;
 
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
+import android.widget.TextView;
 
+import com.group2.finger_occ_demo.MyCanvas;
+import com.group2.finger_occ_demo.R;
+import com.group2.finger_occ_demo.canvasApp;
+import com.group2.finger_occ_demo.R.id;
+import com.group2.finger_occ_demo.R.layout;
 import com.group2.finger_occ_demo.data.Movie;
 
 /**
@@ -24,9 +32,11 @@ public class MovieActivity extends Activity {
 	private Button favoriteButton;
 	private Button saveButton;
 	private Button backButton;
+	private Button deleteButton;
 	
 	// Editable Fields
-	private EditText titleText;
+	private TextView titleText;
+	private EditText yearText;
 	private EditText directorText;
 	private EditText lengthText;
 	private EditText certificationText;
@@ -68,6 +78,13 @@ public class MovieActivity extends Activity {
             }
 			
 		});
+        
+        deleteButton = (Button)findViewById(R.id.deleteButton);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				deleteMovie();
+            }
+		});
     }
     
     /**
@@ -77,8 +94,11 @@ public class MovieActivity extends Activity {
     	String list;
     	
     	// Modify top text fields
-    	titleText = (EditText)findViewById(R.id.titleText);
-    	titleText.setText(movieFound.getTitle() + " (" + movieFound.getYear() + ")");
+    	titleText = (TextView)findViewById(R.id.titleText);
+    	titleText.setText(movieFound.getTitle());
+    	
+    	yearText = (EditText)findViewById(R.id.yearText);
+    	yearText.setText(movieFound.getYear() + "");
     	
     	directorText = (EditText)findViewById(R.id.directorText);
     	directorText.setText(movieFound.getDirector());
@@ -119,17 +139,6 @@ public class MovieActivity extends Activity {
     	else
     		userMovie = new Movie();
     	
-    	// Extract title and year
-    	String title = titleText.getText().toString().split("\\(")[0].trim();
-    	String yearS = titleText.getText().toString().split("\\(")[1].replaceAll("\\)","").replaceAll(" ","");
-    	int year = -1;
-    	try {
-    		year = Integer.parseInt(yearS);
-    	}
-    	catch (NumberFormatException e){
-    		e.printStackTrace(System.out);
-    	}
-    	
     	// Extract actor and genre lists, in Python this would be 2 lines...
     	ArrayList<String> actorsL = new ArrayList<String>();
     	ArrayList<String> genresL = new ArrayList<String>();
@@ -150,19 +159,57 @@ public class MovieActivity extends Activity {
     	
     	// Save top text fields
     	userMovie.setDirector(directorText.getText() + "");
-    	userMovie.setTitle(title);
-    	userMovie.setYear(year);
+    	userMovie.setTitle(titleText.getText() + "");
+    	userMovie.setYear(Integer.parseInt(yearText.getText().toString()));
     	userMovie.setCertification(certificationText.getText() + "");
     	userMovie.setLength(lengthText.getText() + "");
     	userMovie.setActors(actorsL);
     	userMovie.setGenre(genresL);
     	userMovie.setRating((int) ratingBar.getRating());
     	
+    	System.out.println("Saving...: " + canvasApp.users.currentUser());
     	if (canvasApp.users.currentUser() != null)
     		canvasApp.users.currentUser().addMovie(userMovie);
     }
     
+    /**
+     * Add this movie to the list of user favorites if it isn't already there. Does
+     * nothing if there is no user.
+     */
     public void saveFavourite(){
-    	canvasApp.users.currentUser().addFavourite(movieFound.getTitle());
+    	if (canvasApp.users.currentUser() != null)
+    		canvasApp.users.currentUser().addFavourite(movieFound.getTitle());
+    }
+    
+    /**
+     * Delete the current movie from the user if there is a user. If no user nothing happens.
+     * Note the movie will still exist.
+     */
+    public void deleteMovie(){
+    	AlertDialog.Builder alert = new AlertDialog.Builder(this);
+    	
+    	// Pop up alert for delete movie
+    	if (canvasApp.users.currentUser() != null){
+        	DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+        	    public void onClick(DialogInterface dialog, int which) {
+        	        switch (which){
+	        	        // delete the movie and exit this activity
+	        	        case DialogInterface.BUTTON_POSITIVE:
+	        	        	canvasApp.users.currentUser().deleteMovie(movieFound.getTitle());
+	        	        	finish();
+	        	            break;
+	        	        // Do nothing on cancel (or no)
+	        	        case DialogInterface.BUTTON_NEGATIVE:
+	        	            break;
+        	        }
+        	    }
+        	};
+    		
+    		alert.setMessage("Are you sure you want to permanently delete " + movieFound.getTitle() + "?");
+    		alert.setPositiveButton("Yes", dialogClickListener);
+    	    alert.setNegativeButton("No", dialogClickListener);
+    		
+    		alert.show();
+    	}
     }
 }

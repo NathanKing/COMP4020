@@ -1,7 +1,11 @@
-package com.group2.finger_occ_demo;
+package com.group2.finger_occ_demo.activities;
 
 import java.util.ArrayList;
 
+import com.group2.finger_occ_demo.MyCanvas;
+import com.group2.finger_occ_demo.R;
+import com.group2.finger_occ_demo.R.id;
+import com.group2.finger_occ_demo.R.layout;
 import com.group2.finger_occ_demo.data.Movie;
 
 import android.app.Activity;

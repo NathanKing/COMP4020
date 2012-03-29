@@ -2,17 +2,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-
+
     <ListView
         android:id="@+id/listView1"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/UserNameTextBox"
-        android:layout_marginTop="24dp" >
+        android:layout_below="@+id/BackButtonMain" >
 
     </ListView>
-
+
     <TextView
         android:id="@+id/UserNameTextView"
         android:layout_width="wrap_content"
@@ -22,5 +21,24 @@
         android:layout_marginLeft="92dp"
         android:text="Medium Text"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Button
+        android:id="@+id/BackButtonMain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="@string/BackButton" />
+
+    <Button
+        android:id="@+id/LogoutButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/listView1"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="22dp"
+        android:text="@string/Logout"
+        android:textColor="@drawable/red_button"
+        android:textSize="30dp" />
 
 </RelativeLayout>

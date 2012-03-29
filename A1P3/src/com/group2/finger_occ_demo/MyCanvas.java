@@ -14,6 +14,8 @@ import android.view.View.OnDragListener;
 import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 
+import com.group2.finger_occ_demo.activities.MovieActivity;
+import com.group2.finger_occ_demo.activities.MovieSelectActivity;
 import com.group2.finger_occ_demo.data.Movie;
 
 
