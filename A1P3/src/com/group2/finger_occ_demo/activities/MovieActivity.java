@@ -15,8 +15,6 @@ import android.widget.TextView;
 import com.group2.finger_occ_demo.MyCanvas;
 import com.group2.finger_occ_demo.R;
 import com.group2.finger_occ_demo.canvasApp;
-import com.group2.finger_occ_demo.R.id;
-import com.group2.finger_occ_demo.R.layout;
 import com.group2.finger_occ_demo.data.Movie;
 
 /**
@@ -85,47 +83,60 @@ public class MovieActivity extends Activity {
 				deleteMovie();
             }
 		});
+        
+        checkAndSetButtons();
     }
     
     /**
-     * Read in all info into the GUI via the movie that was clicked on for this.
+     * Read in all info into the GUI via the movie that was clicked on for this if the movie sent in is not null.
      */
     private void setMovieInfo(){
     	String list;
     	
     	// Modify top text fields
     	titleText = (TextView)findViewById(R.id.titleText);
-    	titleText.setText(movieFound.getTitle());
+    	if (movieFound != null)
+    		titleText.setText(movieFound.getTitle());
     	
     	yearText = (EditText)findViewById(R.id.yearText);
-    	yearText.setText(movieFound.getYear() + "");
+    	if (movieFound != null)
+    		yearText.setText(movieFound.getYear() + "");
     	
     	directorText = (EditText)findViewById(R.id.directorText);
-    	directorText.setText(movieFound.getDirector());
+    	if (movieFound != null)
+    		directorText.setText(movieFound.getDirector());
     	
     	lengthText = (EditText)findViewById(R.id.lengthText);
-    	lengthText.setText(movieFound.getLength());
+    	if (movieFound != null)
+    		lengthText.setText(movieFound.getLength());
     	
     	certificationText = (EditText)findViewById(R.id.certificationText);
-    	certificationText.setText(movieFound.getCertification());
-    	if (movieFound.getCertification() == null || movieFound.getCertification().equals(""))
-    		certificationText.setText(NO_CERT);
+    	if (movieFound != null){
+	    	certificationText.setText(movieFound.getCertification());
+	    	if (movieFound.getCertification() == null || movieFound.getCertification().equals(""))
+	    		certificationText.setText(NO_CERT);
+    	}
     	
     	// Modify actor and genre lists
-    	list = "";
-    	for (String actor : movieFound.getActors())
-    		list += actor.trim() + ", ";
     	actorText = (EditText)findViewById(R.id.actorText);
-    	actorText.setText(list.substring(0, list.length()-2));// The -2 gets rid of extra comma and space
+    	if (movieFound != null){
+	    	list = "";
+	    	for (String actor : movieFound.getActors())
+	    		list += actor.trim() + ", ";
+	    	actorText.setText(list.substring(0, list.length()-2));// The -2 gets rid of extra comma and space
+    	}
     			
-		list = "";
-    	for (String genre : movieFound.getGenre())
-    		list += genre.trim() + ", ";
     	genreText = (EditText)findViewById(R.id.genresText);
-    	genreText.setText(list.substring(0, list.length()-2));// The -2 gets rid of extra comma and space
+    	if (movieFound != null){
+			list = "";
+	    	for (String genre : movieFound.getGenre())
+	    		list += genre.trim() + ", ";
+	    	genreText.setText(list.substring(0, list.length()-2));// The -2 gets rid of extra comma and space
+    	}
     	
     	ratingBar = (RatingBar)findViewById(R.id.ratingBar1);
-    	ratingBar.setRating(movieFound.getRating());
+    	if (movieFound != null)
+    		ratingBar.setRating(movieFound.getRating());
     }
     
     /**
@@ -134,7 +145,7 @@ public class MovieActivity extends Activity {
      */
     private void saveMovieInfo(){
     	Movie userMovie;
-    	if (canvasApp.users.currentUser() == null)
+    	if (canvasApp.users.currentUser() == null && movieFound != null)
     		userMovie = movieFound;
     	else
     		userMovie = new Movie();
@@ -157,19 +168,29 @@ public class MovieActivity extends Activity {
     	// catch indicates a valid case
     	catch (NumberFormatException e){}
     	
+    	// Get year, if not initially a number force it to be
+    	int year = 1900;
+    	try{
+    		year = Integer.parseInt(yearText.getText().toString());
+    	} catch (Exception e){
+    		yearText.setText(year + "");
+    	}
+    	
     	// Save top text fields
     	userMovie.setDirector(directorText.getText() + "");
     	userMovie.setTitle(titleText.getText() + "");
-    	userMovie.setYear(Integer.parseInt(yearText.getText().toString()));
+    	userMovie.setYear(year);
     	userMovie.setCertification(certificationText.getText() + "");
     	userMovie.setLength(lengthText.getText() + "");
     	userMovie.setActors(actorsL);
     	userMovie.setGenre(genresL);
     	userMovie.setRating((int) ratingBar.getRating());
     	
-    	System.out.println("Saving...: " + canvasApp.users.currentUser());
-    	if (canvasApp.users.currentUser() != null)
+    	if (canvasApp.users.currentUser() != null){
     		canvasApp.users.currentUser().addMovie(userMovie);
+    		movieFound = userMovie;
+    		checkAndSetButtons();
+    	}
     }
     
     /**
@@ -211,5 +232,22 @@ public class MovieActivity extends Activity {
     		
     		alert.show();
     	}
+    }
+    
+    /**
+     * Set all buttons that would be irrelevant if no movie is picked or saved. (Movie being created)
+     */
+    private void checkAndSetButtons(){
+    	if (movieFound == null || canvasApp.users.currentUser() == null){
+    		favoriteButton.setEnabled(false);
+    		deleteButton.setEnabled(false);
+    	}
+    	else{
+    		favoriteButton.setEnabled(true);
+    		deleteButton.setEnabled(true);
+    	}
+    	
+    	if(canvasApp.users.currentUser() == null)
+    		saveButton.setEnabled(false);
     }
 }

@@ -23,9 +23,13 @@ public class UserActivity extends Activity {
 	 * Handles any returns from screens generated from this screen.
 	 */
 	protected void onActivityResult(int requestCode, int resultCode, Intent data){
-		//Automatically exit screen if login so can skip this
+		// Automatically exit screen if login so can skip this
 		if (canvasApp.users.currentUser() != null)
 			finish();
+		// If on a logout create the screen from scratch, note I have limited the use
+		// of bundle here but it shouldn't matter.
+		else
+			onCreate(null);
     }
 	
     public void onCreate(Bundle savedInstanceState) {

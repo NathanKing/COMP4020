@@ -1,11 +1,5 @@
 package com.group2.finger_occ_demo.activities;
 
-import com.group2.finger_occ_demo.MainUserList;
-import com.group2.finger_occ_demo.R;
-import com.group2.finger_occ_demo.User;
-import com.group2.finger_occ_demo.R.id;
-import com.group2.finger_occ_demo.R.layout;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -16,6 +10,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+
+import com.group2.finger_occ_demo.MainUserList;
+import com.group2.finger_occ_demo.R;
+import com.group2.finger_occ_demo.User;
 
 public class FriendsListActivity extends Activity {
 	Button backButton;

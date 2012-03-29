@@ -1,26 +1,19 @@
 package com.group2.finger_occ_demo.activities;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import com.group2.finger_occ_demo.MyCanvas;
-import com.group2.finger_occ_demo.R;
-import com.group2.finger_occ_demo.User;
-import com.group2.finger_occ_demo.canvasApp;
-import com.group2.finger_occ_demo.R.id;
-import com.group2.finger_occ_demo.R.layout;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
-import android.widget.AdapterView.OnItemClickListener;
+
+import com.group2.finger_occ_demo.MyCanvas;
+import com.group2.finger_occ_demo.R;
+import com.group2.finger_occ_demo.User;
+import com.group2.finger_occ_demo.canvasApp;
 
 public class FavouritesActivity extends Activity{
 	Button backButton;

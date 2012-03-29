@@ -69,6 +69,7 @@
     <string name="Save">Save</string>
     <string name="Logout">Logout</string>
     <string name="Delete">Delete</string>
+    <string name="AddMovie">+ Movie</string>
     
     
 </resources>

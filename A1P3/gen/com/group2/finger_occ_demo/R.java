@@ -82,6 +82,7 @@ public final class R {
     public static final class string {
         public static final int AddButton=0x7f04000a;
         public static final int AddFavourite=0x7f04000e;
+        public static final int AddMovie=0x7f040020;
         public static final int Back=0x7f040010;
         public static final int BackButton=0x7f040009;
         public static final int Delete=0x7f04001f;

@@ -71,30 +71,44 @@ public class Points {
 	 * 		  movie is used instead for the point.
 	 */
 	public void init_from_data(List<Movie> movies){
-		float x;
-		float y;
+		float x = -9999;
+		float y = -9999;
 		int color = Color.GREEN;
 		if (movies == null)
 			movies = canvasApp.data.getMovie();
 		float heightInc = availableHeight/(yRange[1] - yRange[0]);
 		float widthInc = availableWidth/(xRange[1] - xRange[0]);
 		Movie toUse;
+		ArrayList<Movie> usedFromUser = new ArrayList<Movie>();
 		
 		squares = new ArrayList<Square_Shape>();
 		for (Movie movie : movies){
 			// See if the current user has a modified version of the current movie
 			toUse = checkCurUser(movie);
+			if (!movie.equals(toUse))
+				usedFromUser.add(toUse);
 			
 			// Don't draw the square as the user deleted it
-			if (toUse != null){
-				x = (float) ( (widthInc * toUse.getYear1900()) + xOffset + xStart);
-				y = (float) ( ((availableHeight + yStart) - (heightInc * toUse.getRating())) + yOffset);//invert the ratings so 0 is at the bottom
-				
-				color = getColor(toUse.getGenre().get(0));
-					
-				squares.add(new Square_Shape(toUse, x + rect_size[0]/2, y - rect_size[1]/2, rect_size, color));// the minus size centers a shape on a tick line
+			if (toUse != null)
+				draw_square(heightInc, widthInc, toUse, color, x, y);
+		}
+		
+		// Also must make sure any extra movies the user has are rendered.
+		if (canvasApp.users.currentUser() != null){
+			for (Movie movie : canvasApp.users.currentUser().getMovies()){
+				if (movie.isDeleted() == false && !usedFromUser.contains(movie))
+					draw_square(heightInc, widthInc, movie, color, x, y);
 			}
 		}
+	}
+	
+	private void draw_square(float heightInc, float widthInc, Movie toUse, int color, float x, float y){
+		x = (float) ( (widthInc * toUse.getYear1900()) + xOffset + xStart);
+		y = (float) ( ((availableHeight + yStart) - (heightInc * toUse.getRating())) + yOffset);//invert the ratings so 0 is at the bottom
+		
+		color = getColor(toUse.getGenre().get(0));
+			
+		squares.add(new Square_Shape(toUse, x + rect_size[0]/2, y - rect_size[1]/2, rect_size, color));// the minus size centers a shape on a tick line
 	}
 	
 	/**

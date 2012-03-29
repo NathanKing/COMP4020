@@ -2,25 +2,17 @@ package com.group2.finger_occ_demo.activities;
 
 import java.util.ArrayList;
 
-import com.group2.finger_occ_demo.MyCanvas;
-import com.group2.finger_occ_demo.R;
-import com.group2.finger_occ_demo.R.id;
-import com.group2.finger_occ_demo.R.layout;
-import com.group2.finger_occ_demo.data.Movie;
-
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.RatingBar;
+
+import com.group2.finger_occ_demo.MyCanvas;
+import com.group2.finger_occ_demo.R;
+import com.group2.finger_occ_demo.data.Movie;
 
 public class MovieSelectActivity extends Activity implements OnItemClickListener{
     /** Called when the activity is first created. */

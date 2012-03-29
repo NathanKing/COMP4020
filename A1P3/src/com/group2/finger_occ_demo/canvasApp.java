@@ -39,6 +39,7 @@ public class canvasApp extends Activity implements OnItemSelectedListener, OnCli
 	private final String USERS_FILE_NAME = "users.json";
 	
 	private MyCanvas canvasView;
+	private Button addMovie;
 	
 	/**
 	 * Handles any returns from screens generated from this screen.
@@ -85,6 +86,13 @@ public class canvasApp extends Activity implements OnItemSelectedListener, OnCli
         	}
         }
         
+        addMovie = (Button) findViewById(R.id.AddButton);
+        addMovie.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				addMovie();
+            }
+		});
+        
         directors.add(0, "All");
         Collections.sort(directors);
         ArrayAdapter<CharSequence> adapter;
@@ -120,6 +128,15 @@ public class canvasApp extends Activity implements OnItemSelectedListener, OnCli
 		
 		frame.addView(canvasView);
     }
+    
+    /**
+     * Adds a movie by going to the usual editing screen with nothing in it. Then by
+     * pressing save.
+     */
+    private void addMovie(){
+    	MyCanvas.movieFound = null;
+		startActivityForResult(new Intent(this, MovieActivity.class), MyCanvas.MOVIE_VIEW_PROCESS);
+    }
 
     /**
      * Save all data so persistence is maintained.
@@ -154,11 +171,8 @@ public class canvasApp extends Activity implements OnItemSelectedListener, OnCli
 
 	 	canvasView.invalidate();
 	}
-
-	@Override
-	public void onNothingSelected(AdapterView<?> parent) {
-		
-	}
+    
+	public void onNothingSelected(AdapterView<?> parent) {}
 	
 	
 	
@@ -168,7 +182,9 @@ public class canvasApp extends Activity implements OnItemSelectedListener, OnCli
 		startActivityForResult(intent, 0);
 	}
 
-	@Override
+	/**
+	 * Handles generic onclick events.
+	 */
 	public void onClick(View v) {
 		Spinner genres = (Spinner)findViewById(R.id.genres);
 		Spinner ratings = (Spinner)findViewById(R.id.ratings);

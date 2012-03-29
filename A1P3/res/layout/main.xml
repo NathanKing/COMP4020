@@ -72,20 +72,30 @@
             android:id="@+id/button1"
             android:layout_width="150dip"
             android:layout_height="50dip"
-            android:layout_alignBottom="@+id/login"
+            android:layout_below="@id/frame"
             android:layout_toRightOf="@+id/textView1"
             android:text="@string/SearchButton" />
-
+
         <EditText
             android:id="@+id/searchText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/button1"
+            android:layout_below="@id/frame"
+            android:layout_toLeftOf="@+id/AddButton"
             android:layout_toRightOf="@+id/button1"
             android:inputType="text" >
 
             <requestFocus />
         </EditText>
+
+        <Button
+            android:id="@+id/AddButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/button1"
+            android:text="@string/AddMovie"
+            android:textColor="@drawable/green_button"/>
 
     </RelativeLayout>
 
