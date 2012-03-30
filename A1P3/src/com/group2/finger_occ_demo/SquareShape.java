@@ -11,7 +11,7 @@ import android.graphics.Rect;
  * Tracks square size, location and color. Resizes square when in radius by in how much
  * in radius * 0.5 * 1 * current size.
  */
-public class Square_Shape {
+public class SquareShape {
 	public Movie movie;
 	private int xDefault;
 	private int yDefault;
@@ -35,7 +35,7 @@ public class Square_Shape {
 	// levels to display progressive info.
 	final private double TEXT_APPEAR = 1.3;//times
 	
-	public Square_Shape(Movie movie, float x, float y, int[] size, int colorNum) {
+	public SquareShape(Movie movie, float x, float y, int[] size, int colorNum) {
 		this.movie  = movie;
 		
 		this.x = (int) x;

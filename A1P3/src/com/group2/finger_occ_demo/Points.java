@@ -18,7 +18,7 @@ import com.group2.finger_occ_demo.data.Movie;
  */
 public class Points {
 	private int[] rect_size = {20, 20};
-	private ArrayList<Square_Shape> squares;
+	private ArrayList<SquareShape> squares;
 	private int radiusPX;// From the center of a shape
 	private float xStart;
 	private float yStart;
@@ -30,7 +30,7 @@ public class Points {
 	private int xOffset;
 	private int yOffset;
 	
-	private Comparator<Square_Shape> sizeSorter;
+	private Comparator<SquareShape> sizeSorter;
 	
 	/**
 	 * Responsible for all shapes in a given box. Note order of list is the way of doing
@@ -52,12 +52,12 @@ public class Points {
 		// Also derive radius from screen size, make it 4 times the shapes size
 		radiusPX = rect_size[0] * 4;
 		
-		squares = new ArrayList<Square_Shape>();
+		squares = new ArrayList<SquareShape>();
 		
 		init_from_data(null);
 		
-		sizeSorter = new Comparator<Square_Shape>(){
-			public int compare(Square_Shape sqr1, Square_Shape sqr2) {
+		sizeSorter = new Comparator<SquareShape>(){
+			public int compare(SquareShape sqr1, SquareShape sqr2) {
 				return (int)sqr1.resizeValue() - (int)sqr2.resizeValue();
 			}
 		};
@@ -84,7 +84,7 @@ public class Points {
 		Movie toUse;
 		ArrayList<Movie> usedFromUser = new ArrayList<Movie>();
 		
-		squares = new ArrayList<Square_Shape>();
+		squares = new ArrayList<SquareShape>();
 		for (Movie movie : movies){
 			// See if the current user has a modified version of the current movie
 			toUse = checkCurUser(movie);
@@ -111,7 +111,7 @@ public class Points {
 		
 		color = getColor(toUse.getGenre().get(0));
 			
-		squares.add(new Square_Shape(toUse, x + rect_size[0]/2, y - rect_size[1]/2, rect_size, color));// the minus size centers a shape on a tick line
+		squares.add(new SquareShape(toUse, x + rect_size[0]/2, y - rect_size[1]/2, rect_size, color));// the minus size centers a shape on a tick line
 	}
 	
 	/**
@@ -232,7 +232,7 @@ public class Points {
 		Point2D p = new Point2D(-1, -1);
 		
 		// This works because everything is z-ordered
-		for (Square_Shape square : squares){
+		for (SquareShape square : squares){
 			if ( square.getX() == p.x && square.getY() == p.y){
 				// Do nothing
 			}
@@ -248,7 +248,7 @@ public class Points {
 	 * If in any drawn shape on the canvas is under the finger and is the biggest.
 	 */
 	public ArrayList<Movie> inShape(int x, int y){
-		Square_Shape square;
+		SquareShape square;
 		int[] position = {x, y};
 		
 		ArrayList<Movie> movies = new ArrayList<Movie>();
@@ -282,7 +282,7 @@ public class Points {
 	 * that will need to be redrawn. The biggest objects are put in front.
 	 */
 	public void checkRadius(int x, int y, View view){
-		for (Square_Shape square : squares){
+		for (SquareShape square : squares){
 				square.checkRadius(x, y, radiusPX);		
 		}		
 		
@@ -317,7 +317,7 @@ public class Points {
 		this.xOffset = 0;
 		this.yOffset = 0;
 		
-		for (Square_Shape square : squares)
+		for (SquareShape square : squares)
 			square.resetPosition();
 	}
 	
