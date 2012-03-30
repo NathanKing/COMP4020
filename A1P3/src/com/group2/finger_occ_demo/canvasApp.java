@@ -148,6 +148,7 @@ public class canvasApp extends Activity implements OnItemSelectedListener, OnCli
     }
     
     @Override
+    @SuppressWarnings(value = { "unused" })
 	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 		 		 
 		Spinner genres = (Spinner)findViewById(R.id.genres);

@@ -1,6 +1,5 @@
 package com.group2.finger_occ_demo;
 
-import android.util.Log;
 import android.view.MotionEvent;
 
 class States

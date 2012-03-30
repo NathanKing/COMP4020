@@ -5,9 +5,7 @@ import java.util.List;
 import com.group2.finger_occ_demo.data.Movie;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;

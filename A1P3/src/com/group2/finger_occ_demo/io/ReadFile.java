@@ -6,7 +6,6 @@ import org.apache.commons.io.IOUtils;
 
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.util.Log;
 
 /**
  * Reads in the specified JSON file, needs the AssetManager of the current

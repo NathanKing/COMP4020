@@ -60,7 +60,6 @@ public class MyCanvas extends View implements OnTouchListener, OnDragListener
     	// Run through views
     	
     	ArrayList<Movie> movies = null;
-    	int result = 0;
     	movies = scatterView.onTouch(event, view);
     	
     	// Open the Movie View Display
