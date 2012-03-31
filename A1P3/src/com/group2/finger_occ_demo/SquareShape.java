@@ -26,6 +26,8 @@ public class SquareShape {
 	private Rect shape = new Rect();
 	private Rect border = new Rect();
 	
+	static private Rect drawBoarder;	// Where to draw the movies on the screen
+	
 	// constants
 	final private int BORDER = 2;//in pixels
 	final private double resizeF = 0.05;//Constant to resize by {2 for device}
@@ -109,7 +111,7 @@ public class SquareShape {
 
 		int f = Math.abs(circle_x - x);
 		int e = Math.abs(circle_y - y);
-		double vector = Math.sqrt(Math.pow(f, 2) + Math.pow(e, 2));
+		int vector = Math.sqrt(Math.pow(f, 2) + Math.pow(e, 2));
 		
 		if (radius - vector > 0)
 		{
