@@ -33,7 +33,7 @@ public class SquareShape {
 	static final int OFFSET_Y = 10;	
 	
 	// levels to display progressive info.
-	final private double TEXT_APPEAR = 1.3;//times
+	final private double TEXT_APPEAR = 1.9;//times
 	
 	public SquareShape(Movie movie, float x, float y, int[] size, int colorNum) {
 		this.movie  = movie;

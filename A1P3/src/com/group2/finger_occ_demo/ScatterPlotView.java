@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.group2.finger_occ_demo.data.Movie;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.view.DragEvent;
@@ -32,7 +33,11 @@ public class ScatterPlotView {
 	
 	final private int POINT_OFFSET = 0;
 	
-	public ScatterPlotView(int screenWidth, int screenHeight){
+	private canvasApp context;
+	
+	public ScatterPlotView(int screenWidth, int screenHeight, canvasApp context){
+		this.context = context;
+		
 		//scatter plot is within 5% of each screen side
 		marginX = (float)(screenWidth * 0.1);
 		marginY = (float)(screenHeight * 0.1);

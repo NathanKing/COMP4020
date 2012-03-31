@@ -64,7 +64,7 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textSize="30px" />
 
-        <TextView
+        <EditText
             android:id="@+id/titleText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -73,6 +73,7 @@
             android:layout_marginBottom="10dp"
             android:layout_marginTop="0dp"
             android:padding="2dp"
+            android:inputType="text"
             android:text="@string/movieViewTitle"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textSize="50px" />

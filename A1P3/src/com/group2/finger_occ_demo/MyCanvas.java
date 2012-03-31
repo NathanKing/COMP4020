@@ -69,8 +69,6 @@ public class MyCanvas extends View implements OnTouchListener, OnDragListener
     			context.startActivityForResult(new Intent(context, MovieActivity.class), MOVIE_VIEW_PROCESS);
     		}
     		else if(movies.size()>1){
-    			System.out.println("here");
-    			
     			moviesFound = movies;
     			context.startActivityForResult(new Intent(context, MovieSelectActivity.class), MOVIE_SELECT_PROCESS);
     		}
@@ -110,6 +108,6 @@ public class MyCanvas extends View implements OnTouchListener, OnDragListener
 		screenHeight = display.getHeight();
 		
 		// Create each view
-		scatterView = new ScatterPlotView(screenWidth, screenHeight);
+		scatterView = new ScatterPlotView(screenWidth, screenHeight,  this.context);
 	}
 }

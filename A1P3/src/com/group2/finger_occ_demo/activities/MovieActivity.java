@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,7 +34,7 @@ public class MovieActivity extends Activity {
 	private Button deleteButton;
 	
 	// Editable Fields
-	private TextView titleText;
+	private EditText titleText;
 	private EditText yearText;
 	private EditText directorText;
 	private EditText lengthText;
@@ -94,9 +95,13 @@ public class MovieActivity extends Activity {
     	String list;
     	
     	// Modify top text fields
-    	titleText = (TextView)findViewById(R.id.titleText);
-    	if (movieFound != null)
+    	titleText = (EditText)findViewById(R.id.titleText);
+    	if (movieFound != null){
     		titleText.setText(movieFound.getTitle());
+    		//title is uneditable when view is in editing mode
+    		titleText.setInputType(InputType.TYPE_NULL);
+    	}
+    		
     	
     	yearText = (EditText)findViewById(R.id.yearText);
     	if (movieFound != null)

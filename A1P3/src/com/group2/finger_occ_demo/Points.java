@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.view.View;
 
 import com.group2.finger_occ_demo.data.Movie;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Responsible for all shapes on screen. Note order of list is the way of doing
@@ -29,6 +30,10 @@ public class Points {
 	private int[] yRange;
 	private int xOffset;
 	private int yOffset;
+	
+	//This controls when to invalidate the entire screen
+	int INVALIDATE_POLL = 5;
+	int invalCount = 0;
 	
 	private Comparator<SquareShape> sizeSorter;
 	
@@ -69,7 +74,7 @@ public class Points {
 	 * where n is the maximum graph value for the axis, n is the maximum value
 	 * for the data points i.e. for rating 10, and r is the current value of the point.
 	 * 
-	 * Note1: If movies is null the default movie list is loaded.
+	 * Note1: If movies is null the default movie list is loaded with non filter user movies.
 	 * Note2: If the current user possesses a movie with the same title that is current that
 	 * 		  movie is used instead for the point.
 	 */
@@ -135,91 +140,131 @@ public class Points {
 		}
 	}
 	
+	/**
+	 * Filters all movie points including users points. The users movies are removed then
+	 * restored after filtering is done.
+	 */
 	public void filter_points(String genre, String rating){
 		squares.clear();
 		List<Movie> movies;
+		List<Movie> userMoviesNew = new ArrayList<Movie>();
+		ArrayList<Movie> userMovies = null;
+		if (canvasApp.users.currentUser() != null)
+			userMovies = (ArrayList<Movie>) canvasApp.users.currentUser().getMovies().clone();
 		
 		if(genre.equals("All") && rating.equals("All")){
 			movies = canvasApp.data.getMovie();
+			userMoviesNew = userMovies;
 		}
 		else{
 			movies = new ArrayList<Movie>();
+			if (canvasApp.users.currentUser() != null)
+			userMoviesNew = canvasApp.users.currentUser().getMovies();
 			
-			for(Movie movie : canvasApp.data.getMovie()){
-				
-				String g = movie.getGenre().get(0);
-				int r = movie.getRating();
-				
-				if(genre.equals("All")){
-					if(r==Integer.valueOf(rating)){
-						movies.add(movie);
-					}
-				}
-				
-				else if(rating.equals("All")){
-					if(g.equals(genre)){
-						movies.add(movie);
-					}
-				}
-				
-				else if(g.equals(genre) && r==Integer.valueOf(rating)){
+			movies = filter_movies(genre, rating, canvasApp.data.getMovie(), movies);
+			userMoviesNew = filter_movies(genre, rating, userMoviesNew, userMoviesNew);
+		}
+		
+		// Use the users updated movie list
+		if (canvasApp.users.currentUser() != null)
+			canvasApp.users.currentUser().setMovies((ArrayList<Movie>) userMoviesNew);
+		
+		init_from_data(movies);
+		
+		// Restore the users movies after they have been filtered.
+		if (canvasApp.users.currentUser() != null)
+			canvasApp.users.currentUser().setMovies(userMovies);
+	}
+	
+	public List<Movie> filter_movies(String genre, String rating, List<Movie> iterateThrough,  List<Movie> movies){
+		for(Movie movie : iterateThrough){
+			
+			String g = movie.getGenre().get(0);
+			int r = movie.getRating();
+			
+			if(genre.equals("All")){
+				if(r==Integer.valueOf(rating)){
 					movies.add(movie);
 				}
 			}
+			
+			else if(rating.equals("All")){
+				if(g.equals(genre)){
+					movies.add(movie);
+				}
+			}
+			
+			else if(g.equals(genre) && r==Integer.valueOf(rating)){
+				movies.add(movie);
+			}
 		}
 		
-		init_from_data(movies);
+		return movies;
 	}
 	
 	public void filter_points(String text, String genre, String rating)
 	{
 		text = text.trim();
 		
-		if(text.length() > 1)
-		{
+		if(text.length() >= 1){
 			squares.clear();
-			List<Movie> movies;
-			
-			movies = new ArrayList<Movie>();
-			
-			for(Movie movie : canvasApp.data.getMovie()){
-				
-				String g = movie.getGenre().get(0);
-				int r = movie.getRating();
-				
-				if(genre.equals("All") && rating.equals("All")){
-					if(Pattern.compile(Pattern.quote(text), Pattern.CASE_INSENSITIVE).matcher(movie.getTitle()).find())
-					{
-						movies.add(movie);
-					}
-				}
-				else
-				if(genre.equals("All")){
-					if(r==Integer.valueOf(rating) && Pattern.compile(Pattern.quote(text), Pattern.CASE_INSENSITIVE).matcher(movie.getTitle()).find()){
-						movies.add(movie);
-					}
-				}
-				
-				else if(rating.equals("All")){
-					if(g.equals(genre) && Pattern.compile(Pattern.quote(text), Pattern.CASE_INSENSITIVE).matcher(movie.getTitle()).find()){
-						movies.add(movie);
-					}
-				}
-				
-				else if(g.equals(genre) && r==Integer.valueOf(rating)){
-					if(Pattern.compile(Pattern.quote(text), Pattern.CASE_INSENSITIVE).matcher(movie.getTitle()).find())
-					{
-						movies.add(movie);
-					}
-				}
+			List<Movie> movies = new ArrayList<Movie>();
+			List<Movie> userMoviesNew = new ArrayList<Movie>();
+			ArrayList<Movie> userMovies = null;
+			if (canvasApp.users.currentUser() != null){
+				userMovies = (ArrayList<Movie>) canvasApp.users.currentUser().getMovies().clone();
+				userMoviesNew = canvasApp.users.currentUser().getMovies();
 			}
+			
+			movie_filter_search(text, genre, rating, canvasApp.data.getMovie(), movies);
+			movie_filter_search(text, genre, rating, userMoviesNew, userMoviesNew);
 		
-		init_from_data(movies);
+			// Use the users updated movie list
+			if (canvasApp.users.currentUser() != null)
+				canvasApp.users.currentUser().setMovies((ArrayList<Movie>) userMoviesNew);
+			
+			init_from_data(movies);
+			
+			// Restore the users movies after they have been filtered.
+			if (canvasApp.users.currentUser() != null)
+				canvasApp.users.currentUser().setMovies(userMovies);
 		}
 		else
-		{
 			init_from_data(canvasApp.data.getMovie());
+	}
+	
+	/**
+	 * With the given variables iterate through the list and put results into movies.
+	 */
+	public List<Movie> movie_filter_search(String text, String genre, String rating, List<Movie> iterateThrough,  List<Movie> movies){
+		System.out.println(text);
+		
+		for(Movie movie : iterateThrough){
+			
+			String g = movie.getGenre().get(0);
+			int r = movie.getRating();
+			
+			if(genre.equals("All") && rating.equals("All")){
+				if(Pattern.compile(Pattern.quote(text), Pattern.CASE_INSENSITIVE).matcher(movie.getTitle()).find())
+					movies.add(movie);
+			}
+			else if(genre.equals("All")){
+				if(r==Integer.valueOf(rating) && Pattern.compile(Pattern.quote(text), Pattern.CASE_INSENSITIVE).matcher(movie.getTitle()).find())
+					movies.add(movie);
+			}
+			
+			else if(rating.equals("All")){
+				if(g.equals(genre) && Pattern.compile(Pattern.quote(text), Pattern.CASE_INSENSITIVE).matcher(movie.getTitle()).find())
+					movies.add(movie);
+			}
+			
+			else if(g.equals(genre) && r==Integer.valueOf(rating)){
+				if(Pattern.compile(Pattern.quote(text), Pattern.CASE_INSENSITIVE).matcher(movie.getTitle()).find())
+					movies.add(movie);
+			}
 		}
+		
+		return movies;
 	}
 
 	
@@ -230,13 +275,10 @@ public class Points {
 	 */
 	public void drawShapes(Canvas on){
 		Point2D p = new Point2D(-1, -1);
-		
+
 		// This works because everything is z-ordered
 		for (SquareShape square : squares){
-			if ( square.getX() == p.x && square.getY() == p.y){
-				// Do nothing
-			}
-			else{
+			if (!(square.getX() == p.x && square.getY() == p.y)){
 				square.draw(on);
 				p.x = square.getX();
 				p.y = square.getY();
@@ -263,33 +305,67 @@ public class Points {
 		if (largest == 0)
 			return movies;
 		
-		for (int i = squares.size() - 1; i > 0; i--){
-			square = squares.get(i);
-			if (square.inShape(position) == true){
-				movies.add(square.getMovie());
+		if (squares.size() > 1){
+			for (int i = squares.size() - 1; i > 0; i--){
+				square = squares.get(i);
+				if (square.inShape(position) == true){
+					System.out.println("in shape");
+					movies.add(square.getMovie());
+				}
+				
+				// Give up on anything smaller than what's selected
+				if (square.resizeValue() < largest)
+					break;
 			}
-			
-			// Give up on anything smaller than what's selected
-			if (square.resizeValue() < largest)
-				break;
 		}
+		else
+			movies.add(squares.get(0).getMovie());
 		
 		return movies;
+	}
+	
+	public void checkRadius(int x, int y, View view){
+		// invalidate only this rectangle.
+		if (invalCount == INVALIDATE_POLL){
+			invalCount = 0;
+			checkRadiusFull(x, y, view);
+		}
+		else
+			checkRadiusSimple(x, y, view);
+		invalCount += 1;
 	}
 	
 	/**
 	 * Checks an expands any shapes in the current radius. Does this by specifying and area
 	 * that will need to be redrawn. The biggest objects are put in front.
 	 */
-	public void checkRadius(int x, int y, View view){
-		for (SquareShape square : squares){
-				square.checkRadius(x, y, radiusPX);		
-		}		
+	public void checkRadiusFull(int x, int y, View view){
+		for (SquareShape square : squares)
+			square.checkRadius(x, y, radiusPX);		
+		
+		view.invalidate();
 		
 		reorderZ();
+	}
+	
+	/**
+	 * Checks an expands any shapes in the current radius. Does this by specifying and area
+	 * that will need to be redrawn. The biggest objects are put in front.
+	 */
+	public void checkRadiusSimple(int x, int y, View view){
+		int largeRadius = (int) (radiusPX * 1.6);
+		for (SquareShape square : squares){
+			// if a square is double the distance away don't bother calculating it. This is a rough approximation keep in mind.
+			if ( (square.getX() > x - largeRadius && square.getX() < x + largeRadius) &&
+				 (square.getY() > y - largeRadius && square.getY() < y + largeRadius))
+				square.checkRadius(x, y, radiusPX);
+		}
 		
 		// invalidate only this rectangle.
-		view.invalidate();
+		view.invalidate(x - largeRadius, y - largeRadius, x + largeRadius, y + largeRadius);
+		
+		reorderZ();
+
 	}
 	
 	/**
