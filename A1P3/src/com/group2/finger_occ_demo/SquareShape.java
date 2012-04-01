@@ -87,7 +87,7 @@ public class SquareShape {
 			shape.left   = tempX - middle;
 			shape.right  = tempX + middle;
 			
-			shape.offset(drawBoarder.left + (int)offset.x, drawBoarder.top + (int)offset.y);	// Offset starting position
+			shape.offset(drawBoarder.left - (int)offset.x, drawBoarder.top - (int)offset.y);	// Offset starting position
 			
 			border.set(shape);
 			border.top    += BORDER;
