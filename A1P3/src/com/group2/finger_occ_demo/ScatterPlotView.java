@@ -47,7 +47,7 @@ public class ScatterPlotView {
 		xOffset = 0;
 		yOffset = 0;
 		
-		points = new Points((float)(marginX * 0.5), (float)(marginY * 0.5) - POINT_OFFSET, sizeX, sizeY, xRange, yRange);
+		points = new Points((int)(marginX * 0.5), (int)(marginY * 0.5) - POINT_OFFSET, sizeX, sizeY, xRange, yRange);
 	}
 	
 	/**
@@ -55,7 +55,7 @@ public class ScatterPlotView {
 	 */
 	public void onDraw(Canvas canvas) {
 		//shapes can obscure lines and graph background, so this is why graph is first.
-		this.drawGraph(canvas);
+		points.drawGraph(canvas);
 		points.drawShapes(canvas);
 	}
 	
@@ -105,55 +105,5 @@ public class ScatterPlotView {
 	 */
 	public void resetPoints(List<Movie> movies){
 		points.init_from_data(movies);
-	}
-	
-	/*
-	 * Non generic draw functions
-	 */
-	
-	/**
-	 * Draws graph lines (no ticks yet).
-	 */
-	private void drawGraph(Canvas canvas){
-		final int TEXT_OFFSET = -15;//tick label offset away from tick line, 0 means starts at tick line
-		final int FROM_YEAR = 1900;
-		Paint black = new Paint();
-		black.setStrokeWidth(3);
-		
-		//left line
-		canvas.drawLine((float)(marginX * 0.5) + xOffset, (float)(marginY * 0.5) + yOffset, (float)(marginX * 0.5) + xOffset, (float)(marginY * 0.5) + sizeY + yOffset, black);
-		
-		//draw left tick lines (with numbers)
-		float yPos;
-		float xPosStart;
-		float xPosEnd;
-		for (int i = 0;i <= TICK_LINES_Y; i += 1){
-			yPos = (float)( (marginY * 0.5) + yOffset + ((( ((marginY * 0.5) + sizeY) /(TICK_LINES_Y + 1)) * i)) );
-			xPosStart = (float)(marginX * 0.5) + xOffset - TICK_SIZE/2;
-			xPosEnd = (float)(marginX * 0.5) + xOffset + TICK_SIZE/2;
-			
-			if (i != TICK_LINES_Y)
-				canvas.drawLine(xPosStart, yPos, xPosEnd, yPos, black);
-			canvas.drawText((TICK_LINES_Y - i) + "", xPosStart - TICK_SIZE/2 - 5, yPos + 4, black);
-		}
-			
-		//bottom line
-		canvas.drawLine((float)(marginX * 0.5) + xOffset, (float)(marginY * 0.5) + sizeY + yOffset, (float) ((marginX * 0.5) + sizeX + xOffset), (float)(marginY * 0.5) +  sizeY + yOffset, black);
-		
-		//draw bottom tick lines
-		float xPos;
-		float yPosStart;
-		float yPosEnd;
-		for (int i = 0;i < TICK_LINES_X; i += 1){
-			xPos = (float) ((marginX * 0.5) + xOffset + ((sizeX/TICK_LINES_X) * (i + 1)));
-			yPosStart = (float) ((marginY * 0.5) + sizeY + yOffset - TICK_SIZE/2);
-			yPosEnd = (float) ((marginY * 0.5) + sizeY + yOffset + TICK_SIZE/2);
-			
-			canvas.drawLine(xPos, yPosStart, xPos, yPosEnd, black);
-			canvas.drawText((FROM_YEAR + (i*10)) + "", xPos - ((sizeX/TICK_LINES_X) * 1) + TEXT_OFFSET, yPosEnd + TICK_SIZE/2 + 5, black);
-			if (i == TICK_LINES_X - 1){
-				canvas.drawText((FROM_YEAR + ((i+1)*10)) + "", xPos + TEXT_OFFSET, yPosEnd + TICK_SIZE/2 + 5, black);
-			}
-		}
 	}
 }

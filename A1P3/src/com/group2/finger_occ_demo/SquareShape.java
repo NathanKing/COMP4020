@@ -17,7 +17,7 @@ public class SquareShape {
 	private int yDefault;
 	private int x;
 	private int y;
-	private int[] size;
+
 	Paint color;
 	Paint borderColor;
 	private double resizeBy;//Computed factor to scale object by
@@ -31,18 +31,18 @@ public class SquareShape {
 	// constants
 	final private int BORDER = 2;//in pixels
 	final private double resizeF = 0.05;//Constant to resize by {2 for device}
-	
-	static final int OFFSET_Y = 10;	
+
+	static final int WIDTH = 20;
+	static final int HEIGHT = 20;
 	
 	// levels to display progressive info.
 	final private double TEXT_APPEAR = 1.9;//times
 	
-	public SquareShape(Movie movie, float x, float y, int[] size, int colorNum) {
+	public SquareShape(Movie movie, int x, int y, int colorNum) {
 		this.movie  = movie;
 		
-		this.x = (int) x;
-		this.y = (int) y;
-		this.size = size;
+		this.x = x;
+		this.y = y;
 		this.resizeBy = 0;
 		
 		this.stale = true;
@@ -62,41 +62,48 @@ public class SquareShape {
 	public void draw(Canvas on){
 		if (stale)
 		{
-			int expandByX = (int) (size[0] * resizeBy);
-			int expandByY = (int) (size[1] * resizeBy);
+			int middle = WIDTH / 2;	// For now, we're using squares. Expand if using rectangles
 			
 			// Offset slightly above finger
 			int offsetY  = (int) (-10 * resizeBy);
 			
-			shape.top    = y - expandByY + offsetY;
-			shape.bottom = y + size[1] + expandByY + offsetY;
-			shape.left   = x - expandByX;
-			shape.right  = x + size[0] + expandByX;
+			middle *= 1 + resizeBy;
+			
+			int tempX    = x *  8;	// Pre-computing due to laziness
+			int tempY    = y * 35;
+			
+			shape.top    = tempY - middle + offsetY;
+			shape.bottom = tempY + middle + offsetY;
+			shape.left   = tempX - middle;
+			shape.right  = tempX + middle;
+			
+			shape.offset(drawBoarder.left, drawBoarder.top);	// Offset starting position
 			
 			border.set(shape);
-			border.top	+= BORDER;
+			border.top    += BORDER;
 			border.bottom -= BORDER;
-			border.left	+= BORDER;
+			border.left   += BORDER;
 			border.right  -= BORDER;
 			
 			stale = false;
 		}
 		
-		on.drawRect(shape, borderColor);
-		on.drawRect(border, color);
-		
-		// Decide on when to display extra data
-		if (resizeBy > TEXT_APPEAR)
-			on.drawText(movie.getTitle(), border.left + 3, border.top + 10, borderColor);
+		if (Rect.intersects(shape, drawBoarder))
+		{
+			on.drawRect(shape, borderColor);
+			on.drawRect(border, color);
+			
+			// Decide on when to display extra data
+			if (resizeBy > TEXT_APPEAR)
+				on.drawText(movie.getTitle(), border.left + 3, border.top + 10, borderColor);			
+		}
 	}
 	
 	/**
 	 * checks if the given coordinates are in the current shape.
 	 */
 	public boolean inShape(int[] position){
-		int expandByX = (int) (size[0] * resizeBy);
-		int expandByY = (int) (size[1] * resizeBy);
-		return ((position[0] > getX() - expandByX) && (position[0] < getX() + size[0] + expandByX && (position[1] > y - expandByY) && (position[1] < y + size[1] + expandByY) ));
+		return this.shape.contains(position[0], position[1]);
 	}
 	
 	/**
@@ -111,7 +118,7 @@ public class SquareShape {
 
 		int f = Math.abs(circle_x - x);
 		int e = Math.abs(circle_y - y);
-		int vector = Math.sqrt(Math.pow(f, 2) + Math.pow(e, 2));
+		double vector = Math.sqrt(Math.pow(f, 2) + Math.pow(e, 2));
 		
 		if (radius - vector > 0)
 		{
@@ -148,7 +155,7 @@ public class SquareShape {
 	 * Receives computed size.
 	 */
 	public int getSize(){
-		return (int) (size[0] * (resizeBy));
+		return (int) (WIDTH * resizeBy);
 	}
 	
 	public double resizeValue(){
@@ -194,5 +201,13 @@ public class SquareShape {
 
 	public void setMovie(Movie movie) {
 		this.movie = movie;
+	}
+
+	public static Rect getDrawBoarder() {
+		return drawBoarder;
+	}
+
+	public static void setDrawBoarder(Rect drawBoarder) {
+		SquareShape.drawBoarder = drawBoarder;
 	}
 }

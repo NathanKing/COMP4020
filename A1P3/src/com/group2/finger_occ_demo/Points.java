@@ -8,6 +8,9 @@ import java.util.List;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.util.Log;
 import android.view.View;
 
 import com.group2.finger_occ_demo.data.Movie;
@@ -21,15 +24,13 @@ public class Points {
 	private int[] rect_size = {20, 20};
 	private ArrayList<SquareShape> squares;
 	private int radiusPX;// From the center of a shape
-	private float xStart;
-	private float yStart;
 	private float availableWidth;
 	private float availableHeight;
 	
+	Rect squaresRegion = new Rect();	// Boarders for scatter plot
+	
 	private int[] xRange;
 	private int[] yRange;
-	private int xOffset;
-	private int yOffset;
 	
 	//This controls when to invalidate the entire screen
 	int INVALIDATE_POLL = 5;
@@ -41,12 +42,11 @@ public class Points {
 	 * Responsible for all shapes in a given box. Note order of list is the way of doing
 	 * z-indexing.
 	 */
-	public Points(float xStart, float yStart, float screenWidth, float screenHeight, int[] xRange, int[] yRange){
+	public Points(int xStart, int yStart, float screenWidth, float screenHeight, int[] xRange, int[] yRange){
 		// Get the available width and ranges
 		this.availableWidth = screenWidth;
 		this.availableHeight = screenHeight;
-		this.xStart = xStart;
-		this.yStart = yStart;
+		
 		this.xRange = xRange;
 		this.yRange = yRange;
 		
@@ -81,10 +81,17 @@ public class Points {
 	public void init_from_data(List<Movie> movies){
 		if (movies == null)
 			movies = canvasApp.data.getMovie();
-		float heightInc = availableHeight/(yRange[1] - yRange[0]);
-		float widthInc = availableWidth/(xRange[1] - xRange[0]);
+		int heightInc = (int) (availableHeight/(yRange[1] - yRange[0]));
+		int widthInc =  (int) (availableWidth/(xRange[1] - xRange[0]));
 		Movie toUse;
 		ArrayList<Movie> usedFromUser = new ArrayList<Movie>();
+		
+		// Configure the plot boarder
+		squaresRegion.top     = 25;
+		squaresRegion.left    = 75;
+		squaresRegion.bottom  = squaresRegion.top + 350;
+		squaresRegion.right   = squaresRegion.left + 800;
+		SquareShape.setDrawBoarder(squaresRegion);
 		
 		squares = new ArrayList<SquareShape>();
 		for (Movie movie : movies){
@@ -107,13 +114,39 @@ public class Points {
 		}
 	}
 	
+	/**
+	 * Draws graph lines (no ticks yet).
+	 */
+	public void drawGraph(Canvas canvas){
+		final int TEXT_OFFSET = -15;//tick label offset away from tick line, 0 means starts at tick line
+		final int FROM_YEAR = 1900;
+		Paint black = new Paint();
+		black.setStrokeWidth(3);
+
+		// Draw boarders
+		canvas.drawLine(squaresRegion.left, squaresRegion.bottom, squaresRegion.right, squaresRegion.bottom, black);	// Bottom
+		canvas.drawLine(squaresRegion.left, squaresRegion.top,    squaresRegion.left,  squaresRegion.bottom, black);	// Left
+	}	
+	
 	private void createSquare(float heightInc, float widthInc, Movie toUse){
-		float x = (float) ( (widthInc * toUse.getYear1900()) + xOffset + xStart);
-		float y = (float) ( ((availableHeight + yStart) - (heightInc * toUse.getRating())) + yOffset);//invert the ratings so 0 is at the bottom
-		
+		int x = toUse.getYear1900();
+		int y = 10 - toUse.getRating();		//invert the ratings so 0 is at the bottom
 		int color = getColor(toUse.getGenre().get(0));
-			
-		squares.add(new SquareShape(toUse, x + rect_size[0]/2, y - rect_size[1]/2, rect_size, color));// the minus size centers a shape on a tick line
+		
+		// Don't add duplicates. Linear search is terrible...
+		for (SquareShape square : squares)
+		{
+			if (square.getX() == x &&
+				square.getY() == y)
+			{
+				// Add to movie list in a square
+			}
+			else
+			{
+				// Create initial suqare
+				squares.add(new SquareShape(toUse, x, y, color));
+			}
+		}
 	}
 	
 	/**
@@ -271,15 +304,8 @@ public class Points {
 	 * the current shape to drawable.
 	 */
 	public void drawShapes(Canvas on){
-		Point2D p = new Point2D(-1, -1);
-
-		// This works because everything is z-ordered
 		for (SquareShape square : squares){
-			if (!(square.getX() == p.x && square.getY() == p.y)){
-				square.draw(on);
-				p.x = square.getX();
-				p.y = square.getY();
-			}
+			square.draw(on);
 		}
 	}
 	
@@ -341,8 +367,6 @@ public class Points {
 			square.checkRadius(x, y, radiusPX);		
 		
 		view.invalidate();
-		
-		reorderZ();
 	}
 	
 	/**
@@ -360,19 +384,8 @@ public class Points {
 		
 		// invalidate only this rectangle.
 		view.invalidate(x - largeRadius, y - largeRadius, x + largeRadius, y + largeRadius);
-		
-		reorderZ();
+	}
 
-	}
-	
-	/**
-	 * Reorders z-indexing of shapes (list order) by the current size of
-	 * the shape. Greatest elements are last as they are rendered last
-	 * overlapping other elements.
-	 */
-	private void reorderZ(){
-		Collections.sort(squares, sizeSorter);
-	}
 	
 	/**
 	 * Sets all shapes to the default size
@@ -387,9 +400,6 @@ public class Points {
 	 */
 	
 	public void resetPosition(){
-		this.xOffset = 0;
-		this.yOffset = 0;
-		
 		for (SquareShape square : squares)
 			square.resetPosition();
 	}
