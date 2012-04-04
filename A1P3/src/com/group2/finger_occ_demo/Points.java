@@ -117,8 +117,8 @@ public class Points {
 	/**
 	 * Draws graph lines (no ticks yet).
 	 */
-	public void drawGraph(Canvas canvas){
-		final int TEXT_OFFSET = -15;//tick label offset away from tick line, 0 means starts at tick line
+	public void drawGraph(Canvas canvas, float zoom){
+		final int TEXT_OFFSET = 25;//tick label offset away from tick line, 0 means starts at tick line
 		final int FROM_YEAR = 1900;
 		Paint black = new Paint();
 		black.setStrokeWidth(3);
@@ -126,26 +126,50 @@ public class Points {
 		// Draw boarders
 		canvas.drawLine(squaresRegion.left, squaresRegion.bottom, squaresRegion.right, squaresRegion.bottom, black);	// Bottom
 		canvas.drawLine(squaresRegion.left, squaresRegion.top,    squaresRegion.left,  squaresRegion.bottom, black);	// Left
+		
+		int loop;
+		int text;
+		
+		text = 0;
+		for (loop = squaresRegion.bottom; loop >= squaresRegion.top; loop -= 35 * zoom)
+		{
+			canvas.drawLine(squaresRegion.left - 10, loop, squaresRegion.left, loop, black);
+			canvas.drawText(Integer.toString(text++), squaresRegion.left - TEXT_OFFSET, loop + 5, black);
+		}
+		
+		text = FROM_YEAR;
+		for (loop = squaresRegion.left; loop <= squaresRegion.right + 1; loop += 40 * zoom)
+		{
+			canvas.drawLine(loop, squaresRegion.bottom, loop, squaresRegion.bottom + 10, black);
+			canvas.drawText(Integer.toString(text), loop - 10, squaresRegion.bottom + 25, black);
+			text += 5;
+		}
 	}	
 	
 	private void createSquare(float heightInc, float widthInc, Movie toUse){
 		int x = toUse.getYear1900();
-		int y = 10 - toUse.getRating();		//invert the ratings so 0 is at the bottom
+		int y = toUse.getRating();		//invert the ratings so 0 is at the bottom
 		int color = getColor(toUse.getGenre().get(0));
 		
-		// Don't add duplicates. Linear search is terrible...
+		boolean found = false;
+		
+		// Don't add duplicates. My linear search is terrible...
 		for (SquareShape square : squares)
 		{
 			if (square.getX() == x &&
 				square.getY() == y)
 			{
-				// Add to movie list in a square
+				found = true;
+				break;
 			}
-			else
-			{
-				// Create initial suqare
-				squares.add(new SquareShape(toUse, x, y, color));
-			}
+		}
+		
+		// Add to movie list held in a square
+		if (found) {}
+		else
+		{
+			// Create initial square
+			squares.add(new SquareShape(toUse, x, y, color));
 		}
 	}
 	
@@ -303,9 +327,9 @@ public class Points {
 	 * same place of an array. So can use previous coordinates to determine if shape is drawable. Also sets
 	 * the current shape to drawable.
 	 */
-	public void drawShapes(Canvas on){
+	public void drawShapes(Canvas on, float zoom){
 		for (SquareShape square : squares){
-			square.draw(on);
+			square.draw(on, zoom);
 		}
 	}
 	
@@ -347,45 +371,23 @@ public class Points {
 		return movies;
 	}
 	
-	public void checkRadius(int x, int y, View view){
-		// invalidate only this rectangle.
-		if (invalCount == INVALIDATE_POLL){
-			invalCount = 0;
-			checkRadiusFull(x, y, view);
-		}
-		else
-			checkRadiusSimple(x, y, view);
-		invalCount += 1;
-	}
-	
 	/**
 	 * Checks an expands any shapes in the current radius. Does this by specifying and area
 	 * that will need to be redrawn. The biggest objects are put in front.
 	 */
-	public void checkRadiusFull(int x, int y, View view){
+	public void checkRadius(int x, int y, View view){
 		for (SquareShape square : squares)
-			square.checkRadius(x, y, radiusPX);		
+			square.checkRadius(x, y, radiusPX);
 		
 		view.invalidate();
+		
+		reorderZ();
 	}
 	
-	/**
-	 * Checks an expands any shapes in the current radius. Does this by specifying and area
-	 * that will need to be redrawn. The biggest objects are put in front.
-	 */
-	public void checkRadiusSimple(int x, int y, View view){
-		int largeRadius = (int) (radiusPX * 1.6);
-		for (SquareShape square : squares){
-			// if a square is double the distance away don't bother calculating it. This is a rough approximation keep in mind.
-			if ( (square.getX() > x - largeRadius && square.getX() < x + largeRadius) &&
-				 (square.getY() > y - largeRadius && square.getY() < y + largeRadius))
-				square.checkRadius(x, y, radiusPX);
-		}
-		
-		// invalidate only this rectangle.
-		view.invalidate(x - largeRadius, y - largeRadius, x + largeRadius, y + largeRadius);
+	private void reorderZ()
+	{
+		Collections.sort(squares, sizeSorter);
 	}
-
 	
 	/**
 	 * Sets all shapes to the default size
@@ -402,6 +404,12 @@ public class Points {
 	public void resetPosition(){
 		for (SquareShape square : squares)
 			square.resetPosition();
+	}
+	
+	public void invalidate()
+	{
+		for (SquareShape square : squares)
+			square.invalidate();
 	}
 	
 	public int getColor(String color){

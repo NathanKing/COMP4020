@@ -35,6 +35,8 @@ public class SquareShape {
 	static final int WIDTH = 20;
 	static final int HEIGHT = 20;
 	
+	static final float RESIZE_FACTOR = 1.2f;	// How much more we should resize the squares
+	
 	// levels to display progressive info.
 	final private double TEXT_APPEAR = 1.9;//times
 	
@@ -59,18 +61,23 @@ public class SquareShape {
 	 * Draw rectangle on current canvas with text denoting its number, resize from center if necessary. Contains
 	 * a black border.
 	 */
-	public void draw(Canvas on){
+	public void draw(Canvas on, float zoom)
+	{
 		if (stale)
 		{
 			int middle = WIDTH / 2;	// For now, we're using squares. Expand if using rectangles
 			
 			// Offset slightly above finger
 			int offsetY  = (int) (-10 * resizeBy);
+			int tempX;
+			int tempY;
 			
 			middle *= 1 + resizeBy;
 			
-			int tempX    = x *  8;	// Pre-computing due to laziness
-			int tempY    = y * 35;
+			tempX    = (int) (x *  8 * zoom);	// Pre-computing due to laziness
+			tempY    = (int) (y * 35 * zoom);
+			
+			tempY	 = drawBoarder.bottom - (tempY + 25);	// 5 is to offset to the baseline
 			
 			shape.top    = tempY - middle + offsetY;
 			shape.bottom = tempY + middle + offsetY;
@@ -92,11 +99,11 @@ public class SquareShape {
 		{
 			on.drawRect(shape, borderColor);
 			on.drawRect(border, color);
-			
+
 			// Decide on when to display extra data
 			if (resizeBy > TEXT_APPEAR)
 				on.drawText(movie.getTitle(), border.left + 3, border.top + 10, borderColor);			
-		}
+		}		
 	}
 	
 	/**
@@ -128,6 +135,8 @@ public class SquareShape {
 		else
 			setDefaultSize();
 	
+		resizeBy *= RESIZE_FACTOR;
+		
 		return false;
 	}
 	
@@ -193,6 +202,12 @@ public class SquareShape {
 		
 		stale = true;
 		this.y = y;
+	}
+	
+	public void invalidate()
+	{
+		stale = true;
+		resizeBy = 0;
 	}
 	
 	public Movie getMovie() {

@@ -14,6 +14,7 @@ import android.view.View.OnDragListener;
 import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 
+import com.group2.finger_occ_demo.States.FingerStates;
 import com.group2.finger_occ_demo.activities.MovieActivity;
 import com.group2.finger_occ_demo.activities.MovieSelectActivity;
 import com.group2.finger_occ_demo.data.Movie;
@@ -57,10 +58,38 @@ public class MyCanvas extends View implements OnTouchListener, OnDragListener
 	 * Dispatches onTouch to all views. invalidate bubbles down.
 	 */
     public boolean onTouch(View view, MotionEvent event) {
-    	// Run through views
-    	
     	ArrayList<Movie> movies = null;
-    	movies = scatterView.onTouch(event, view);
+    	FingerStates state;
+    	float zoom;
+
+    	// Feed the state machine
+    	state = States.massageEvent(event);
+    	
+    	switch (state)
+    	{
+	    	case HOVER:
+	    		scatterView.onTouch(event, view);
+	    		break;
+
+	    	case IDLE:
+	    		movies = scatterView.getMovies(event);
+	    		
+	    		scatterView.invalidate();
+	    		view.invalidate();
+	    		break;
+	    		
+	    	case RESIZE:
+	        	zoom = (float)States.zoom;
+	        	
+	        	if (zoom < 0.8f)
+	        		scatterView.setZoom(0.8f);
+	        	else
+	        		scatterView.setZoom(zoom);	    		
+	    		
+	    		scatterView.invalidate();
+	    		view.invalidate();
+	    		break;
+    	}
     	
     	// Open the Movie View Display
     	if (movies!=null){
@@ -73,9 +102,7 @@ public class MyCanvas extends View implements OnTouchListener, OnDragListener
     			context.startActivityForResult(new Intent(context, MovieSelectActivity.class), MOVIE_SELECT_PROCESS);
     		}
     	}
-
-    	// Feed the state machine
-    	States.massageEvent(event);
+    	
     	
         return true;   
     }

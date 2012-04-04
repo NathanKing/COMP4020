@@ -24,28 +24,17 @@ public class ScatterPlotView {
 	private int[] xRange = {0, 110};// currently year produced
 	private int[] yRange = {0, 10};// currently rating
 	
-	private int xOffset;
-	private int yOffset;
-	
-	final private int TICK_LINES_Y = 10;
-	final private int TICK_LINES_X = 11;
-	final private int TICK_SIZE = 15;//in px
-	
+	private float zoom = 1.0f;
+
 	final private int POINT_OFFSET = 0;
 	
-	private canvasApp context;
-	
 	public ScatterPlotView(int screenWidth, int screenHeight, canvasApp context){
-		this.context = context;
 		
 		//scatter plot is within 5% of each screen side
 		marginX = (float)(screenWidth * 0.1);
 		marginY = (float)(screenHeight * 0.1);
 		sizeX = (float) (screenWidth - (marginX * 2));
 		sizeY = (float) (screenHeight - ((marginY * 0.5) * 7));//*7 is to account for bottom bar
-		
-		xOffset = 0;
-		yOffset = 0;
 		
 		points = new Points((int)(marginX * 0.5), (int)(marginY * 0.5) - POINT_OFFSET, sizeX, sizeY, xRange, yRange);
 	}
@@ -55,28 +44,32 @@ public class ScatterPlotView {
 	 */
 	public void onDraw(Canvas canvas) {
 		//shapes can obscure lines and graph background, so this is why graph is first.
-		points.drawGraph(canvas);
-		points.drawShapes(canvas);
+		points.drawGraph(canvas, zoom);
+		points.drawShapes(canvas, zoom);
 	}
 	
 	/**
 	 * Handles touching on the scatter plot. Make sure the event is sent in.
 	 * Returns any alert message text.
 	 */
-	public ArrayList<Movie> onTouch(MotionEvent event, View view) {
-		ArrayList<Movie> movies = null;
-		
+	private Point2D oldPos = new Point2D(0, 0);
+	public void onTouch(MotionEvent event, View view) {
 		// check if finger is in radius to resize any objects (want to make objects bigger on touch and drag)
-		points.checkRadius((int)event.getX(), (int)event.getY(), view);
-		    	
-    	if(event.getAction() == MotionEvent.ACTION_UP ){
-    		// See if finger is in any of the objects
-    		movies = points.inShape((int)event.getX(), (int)event.getY());
-    			
-    		view.invalidate();
-    	}
-    	    	
-    	return movies;
+		float x = event.getX();
+		float y = event.getY();
+		
+		// Remove jitter, save battery
+		if (oldPos.x != x && oldPos.y != y)
+		{
+			points.checkRadius((int)x, (int)y, view);
+			oldPos.x = x;
+			oldPos.y = y;
+		}
+	}
+	
+	public ArrayList<Movie> getMovies(MotionEvent event)
+	{
+		return points.inShape((int)event.getX(), (int)event.getY());		
 	}
 	
 	/**
@@ -94,10 +87,12 @@ public class ScatterPlotView {
 	 * Resets scatter plot. Currently only resets panning.
 	 */
 	public void resetGraph(){
-		this.xOffset = 0;
-		this.yOffset = 0;
-		
 		points.resetPosition();
+	}
+	
+	public void invalidate()
+	{
+		points.invalidate();
 	}
 	
 	/**
@@ -105,5 +100,10 @@ public class ScatterPlotView {
 	 */
 	public void resetPoints(List<Movie> movies){
 		points.init_from_data(movies);
+	}
+	
+	public void setZoom(float zoom)
+	{
+		this.zoom = zoom;
 	}
 }

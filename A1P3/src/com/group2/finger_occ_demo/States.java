@@ -1,5 +1,6 @@
 package com.group2.finger_occ_demo;
 
+import android.util.Log;
 import android.view.MotionEvent;
 
 class States
@@ -15,13 +16,14 @@ class States
 	}
 	
 	public static final int SWIPE_DISTANCE =   10;	// How many pixels do we have to move to initiate a move
-	public static final int HOVER_TIMEOUT  = 1000;	// How many milliseconds before detecting hover
+	public static final int HOVER_TIMEOUT  =  700;	// How many milliseconds before detecting hover
 	public static final int SELECT_TIMEOUT = 2000;	// How long without moving before item should be selected
 	public static final int SELECT_MOVE    =   10;  // How many pixels does it take to reset the select timeout
 	
 	// Used by other functions
 	static Point2D screen_offset = new Point2D(0,0);
-	static double zoom = 0;
+	private static final double ZOOM_DEV = 150f;
+	static double zoom = 1;
 	
 	// Used only in inputMachine
 	static FingerStates fs = FingerStates.IDLE; 
@@ -95,10 +97,12 @@ class States
 				if (oldDistance != 0)
 				{
 					// Offset our zoom by the distance between the two fingers
-					zoom += oldDistance - one.distance(two);					
+					zoom -= (oldDistance - one.distance(two)) / ZOOM_DEV;					
 				}
 				
 				oldDistance = one.distance(two);
+				
+				break;
 				
 			// One finger. Just moving
 			case SWIPE:
@@ -115,26 +119,21 @@ class States
 				break;
 				
 			case HOVER:
-				// If user moved, consider the hover state reset
-				if (old.distance(one) > SELECT_MOVE)
-					stateStart = System.currentTimeMillis();
+				// This is our new end. Don't leave this state until the user lets go.
 				
-				// If the user hovers without moving, consider something selected
-				if (System.currentTimeMillis() > stateStart + SELECT_TIMEOUT)
-					fs = FingerStates.SELECT;
-				
-				break;
-				
-			case SELECT:
-				// We have nothing to do in here but wait for fingers to be removed
 				break;
 		}
 		
-		//Log.w("State", fs.toString() + " start:" + stateStart + " time:" + System.currentTimeMillis());
-		//Log.w("Values", "Zoom: " + Double.toString(zoom) + " Offset: " + screen_offset.toString());
+		Log.w("State", fs.toString() + " start:" + stateStart + " time:" + System.currentTimeMillis());
+		Log.w("Values", "Zoom: " + Double.toString(zoom) + " Offset: " + screen_offset.toString());
 		
 		oldTimestamp = timestamp;
 		old = one;
+		
+		// Guarantee some sort of lower threshold
+		if (zoom < 0.1)
+			zoom = 0.1;
+		
 		return fs;
 	}
 	
