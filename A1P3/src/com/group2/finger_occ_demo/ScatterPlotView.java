@@ -43,6 +43,10 @@ public class ScatterPlotView {
 	 * Whenever the canvas is redrawn, these objects are drawn.
 	 */
 	public void onDraw(Canvas canvas) {
+		// Draw mini-map
+		points.drawPoints(canvas, zoom);
+		points.drawViewRect(canvas, zoom);
+		
 		points.drawShapes(canvas, zoom);
 		points.drawGraph(canvas, zoom);
 	}

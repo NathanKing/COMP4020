@@ -39,6 +39,9 @@ public class Points {
 	
 	private Comparator<SquareShape> sizeSorter;
 	
+	private Rect viewRect;
+	private Paint viewRectPaint;
+	
 	/**
 	 * Responsible for all shapes in a given box. Note order of list is the way of doing
 	 * z-indexing.
@@ -67,6 +70,19 @@ public class Points {
 				return (int)sqr1.resizeValue() - (int)sqr2.resizeValue();
 			}
 		};
+		
+		// Configure the plot boarder
+		squaresRegion.top     = 25;
+		squaresRegion.left    = 75;
+		squaresRegion.bottom  = squaresRegion.top + 350;
+		squaresRegion.right   = squaresRegion.left + 800;
+		SquareShape.setDrawBoarder(squaresRegion);
+
+		// Configure mini-map view boarder
+		viewRect = new Rect(squaresRegion);
+		viewRect.inset(360, 157);
+		
+		viewRectPaint = new Paint(Color.BLACK);
 	}
 	
 	/**
@@ -86,13 +102,6 @@ public class Points {
 		int widthInc =  (int) (availableWidth/(xRange[1] - xRange[0]));
 		Movie toUse;
 		ArrayList<Movie> usedFromUser = new ArrayList<Movie>();
-		
-		// Configure the plot boarder
-		squaresRegion.top     = 25;
-		squaresRegion.left    = 75;
-		squaresRegion.bottom  = squaresRegion.top + 350;
-		squaresRegion.right   = squaresRegion.left + 800;
-		SquareShape.setDrawBoarder(squaresRegion);
 		
 		squares = new ArrayList<SquareShape>();
 		for (Movie movie : movies){
@@ -370,6 +379,26 @@ public class Points {
 	}
 	
 	/**
+	 * Draw mini-map
+	 * @param on
+	 * @param zoom
+	 */
+	public void drawPoints(Canvas on, float zoom)
+	{
+		for (SquareShape square : squares){
+			square.drawPoint(on, zoom, viewRect);
+		}		
+	}
+	
+	public void drawViewRect(Canvas canvas, float zoom)
+	{
+		canvas.drawLine(viewRect.left,  viewRect.bottom, viewRect.right, viewRect.bottom, viewRectPaint);	// Bottom
+		canvas.drawLine(viewRect.left,  viewRect.top,    viewRect.left,  viewRect.bottom, viewRectPaint);	// Left
+		canvas.drawLine(viewRect.left,  viewRect.top,    viewRect.right, viewRect.top,    viewRectPaint);	// Top
+		canvas.drawLine(viewRect.right, viewRect.top,    viewRect.right, viewRect.bottom, viewRectPaint);	// Right
+	}
+	
+	/**
 	 * If in any drawn shape on the canvas is under the finger and is the biggest.
 	 */
 	public ArrayList<Movie> inShape(int x, int y){
@@ -457,7 +486,7 @@ public class Points {
 	public int getColor(String color){
 		
 		if(color.equals("Action")){
-			return Color.WHITE;
+			return Color.LTGRAY;
 		}
 		else if(color.equals("Drama")){
 			return Color.RED;	
@@ -498,6 +527,6 @@ public class Points {
 		else if(color.equals("Thriller")){
 			return Color.rgb(178, 34, 34);
 		}
-		return Color.WHITE;
+		return Color.argb(200, 200, 0, 250);
 	}
 }
