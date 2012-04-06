@@ -62,7 +62,7 @@ class States
 					fs = FingerStates.SWIPE;
 					
 					// Track how far the finger moved
-					screen_offset.translate(old.x - one.x, old.y - one.y);
+					screen_offset.translate(one.x - old.x, one.y - old.y);
 					break;
 				}
 				
@@ -103,7 +103,7 @@ class States
 				oldDistance = one.distance(two);
 				
 				// Track how far the finger moved and apply it to our canvas offset
-				screen_offset.translate(old.x - one.x, old.y - one.y);
+				screen_offset.translate(one.x - old.x, one.y - old.y);
 				
 				break;
 				
@@ -117,7 +117,7 @@ class States
 				}
 			
 				// Track how far the finger moved and apply it to our canvas offset
-				screen_offset.translate(old.x - one.x, old.y - one.y);
+				screen_offset.translate(one.x - old.x, one.y - old.y);
 			
 				break;
 				

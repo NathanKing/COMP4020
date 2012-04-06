@@ -20,8 +20,8 @@ public class Point2D {
 	
 	public void translate(float x, float y)
 	{
-		this.x -= x;
-		this.y -= y;
+		this.x += x;
+		this.y += y;
 	}
 	
 	public float getX() {

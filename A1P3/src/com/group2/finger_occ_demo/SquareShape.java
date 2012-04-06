@@ -44,6 +44,8 @@ public class SquareShape {
 	// levels to display progressive info.
 	final private double TEXT_APPEAR = 1.9;//times
 	
+	private String countText = "";
+	
 	public SquareShape(Movie movie, int x, int y, int colorNum) {
 		this.movie.add(movie);
 		
@@ -55,20 +57,15 @@ public class SquareShape {
 		
 		color = new Paint();
 		color.setColor(colorNum);
-		color.setAntiAlias(true);
+		color.setAntiAlias(false);
 		
 		// black border
 		borderColor = new Paint(Color.BLACK);
+		borderColor.setAntiAlias(false);
 	}
 	
-	/**
-	 * Draw rectangle on current canvas with text denoting its number, resize from center if necessary. Contains
-	 * a black border.
-	 */
-	public void draw(Canvas on, float zoom)
+	private void translate(float zoom)
 	{
-		Movie topMovie = movie.getFirst();
-		
 		if (stale)
 		{
 			int middle = WIDTH / 2;	// For now, we're using squares. Expand if using rectangles
@@ -99,7 +96,18 @@ public class SquareShape {
 			border.right  -= BORDER;
 			
 			stale = false;
-		}
+		}		
+	}
+	
+	/**
+	 * Draw rectangle on current canvas with text denoting its number, resize from center if necessary. Contains
+	 * a black border.
+	 */
+	public void draw(Canvas on, float zoom)
+	{
+		Movie topMovie = movie.getFirst();
+		
+		translate(zoom);
 		
 		if (Rect.intersects(shape, drawBoarder))
 		{
@@ -108,8 +116,44 @@ public class SquareShape {
 
 			// Decide on when to display extra data
 			if (resizeBy > TEXT_APPEAR)
-				on.drawText(topMovie.getTitle(), border.left + 3, border.top + 10, borderColor);			
+			{
+				on.drawText(topMovie.getTitle(),	border.left + 3, border.top + 10, borderColor);
+				on.drawText(countText,				border.left + 3, border.top + 20, borderColor);
+			}
 		}
+	}
+	
+	/**
+	 * Relies on standard draw to handle proper
+	 * @param on
+	 */
+	public void drawPoint(Canvas on, float zoom, Rect viewRect)
+	{
+		// Incredible amounts of laziness here!
+		
+		
+		
+		translate(zoom);
+		
+		int tempX, tempY;
+		
+		tempX = shape.left;
+		tempY = shape.top;
+		
+		// Undo old offset
+		tempX -= drawBoarder.left;
+		tempY -= drawBoarder.top;
+		
+		tempX /= 10;
+		tempY /= 10;
+		
+		// Do our own offset
+		tempX += viewRect.left;
+		tempY += viewRect.top;
+		
+		// Draw point on 'world map'
+		on.drawCircle(tempX, tempY, 1, color);
+		//on.drawPoint(x,y, borderColor);
 	}
 	
 	/**
@@ -222,6 +266,12 @@ public class SquareShape {
 
 	public void addMovie(Movie movie) {
 		this.movie.add(movie);
+		
+		int count = this.movie.size();
+		if (count > 1)
+		{
+			countText = "(+" + count + " others)";
+		}
 	}
 
 	public static Rect getDrawBoarder() {
