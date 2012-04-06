@@ -28,6 +28,7 @@ public class Points {
 	private float availableHeight;
 	
 	Rect squaresRegion = new Rect();	// Boarders for scatter plot
+	private Point2D offset = new Point2D(0,0);
 	
 	private int[] xRange;
 	private int[] yRange;
@@ -122,27 +123,58 @@ public class Points {
 		final int FROM_YEAR = 1900;
 		Paint black = new Paint();
 		black.setStrokeWidth(3);
-
+		black.setFakeBoldText(true);
+		
+		final int XWIDTH		= 40;	// Width of x-axis tick marks in pixels
+		final int YHEIGHT		= 35;	// Width of y-axis tick marks
+		final int XSTEP			=  5;	// Change in X per step
+		final int YSTEP			=  1;	// Change in Y per step
+		
+		float adjWidthX		= (XWIDTH  * zoom);
+		float adjHeightY	= (YHEIGHT * zoom);
+		
 		// Draw boarders
-		canvas.drawLine(squaresRegion.left, squaresRegion.bottom, squaresRegion.right, squaresRegion.bottom, black);	// Bottom
-		canvas.drawLine(squaresRegion.left, squaresRegion.top,    squaresRegion.left,  squaresRegion.bottom, black);	// Left
+		canvas.drawLine(squaresRegion.left,  squaresRegion.bottom, squaresRegion.right, squaresRegion.bottom, black);	// Bottom
+		canvas.drawLine(squaresRegion.left,  squaresRegion.top,    squaresRegion.left,  squaresRegion.bottom, black);	// Left
+		canvas.drawLine(squaresRegion.left,  squaresRegion.top,    squaresRegion.right, squaresRegion.top,    black);	// Top
+		canvas.drawLine(squaresRegion.right, squaresRegion.top,    squaresRegion.right, squaresRegion.bottom, black);	// Right
+
 		
-		int loop;
+		float loop;
 		int text;
-		
-		text = 0;
-		for (loop = squaresRegion.bottom; loop >= squaresRegion.top; loop -= 35 * zoom)
+		float start;
+
+		text = 0 + ((int)(offset.y / adjHeightY) * YSTEP);
+		start  = squaresRegion.bottom;
+		start += offset.y % adjHeightY;
+		if (start > squaresRegion.bottom)
 		{
-			canvas.drawLine(squaresRegion.left - 10, loop, squaresRegion.left, loop, black);
-			canvas.drawText(Integer.toString(text++), squaresRegion.left - TEXT_OFFSET, loop + 5, black);
+			start -= adjHeightY;
+			text  += YSTEP;
 		}
 		
-		text = FROM_YEAR;
-		for (loop = squaresRegion.left; loop <= squaresRegion.right + 1; loop += 40 * zoom)
+		for (loop = start; loop >= squaresRegion.top; loop -= adjHeightY)
+		{
+			canvas.drawLine(squaresRegion.left - 10, loop, squaresRegion.left, loop, black);
+			canvas.drawText(Integer.toString(text), squaresRegion.left - TEXT_OFFSET, loop + 5, black);
+			text += YSTEP;
+		}
+		
+		
+		text = FROM_YEAR - ((int)(offset.x / (adjWidthX)) * XSTEP);
+		start  = squaresRegion.left;
+		start += offset.x % adjWidthX;
+		if (start < squaresRegion.left)
+		{
+			start += adjWidthX;
+			text  += XSTEP;
+		}
+		
+		for (loop = start; loop <= squaresRegion.right + 1; loop += adjWidthX)
 		{
 			canvas.drawLine(loop, squaresRegion.bottom, loop, squaresRegion.bottom + 10, black);
 			canvas.drawText(Integer.toString(text), loop - 10, squaresRegion.bottom + 25, black);
-			text += 5;
+			text += XSTEP;
 		}
 	}	
 	
@@ -320,7 +352,6 @@ public class Points {
 		
 		return movies;
 	}
-
 	
 	/**
 	 * Draw all shapes visible on the sent canvas. Due to ordering shapes in the same position end up in the
@@ -328,9 +359,15 @@ public class Points {
 	 * the current shape to drawable.
 	 */
 	public void drawShapes(Canvas on, float zoom){
+		// Make sure we don't draw where we aren't supposed to
+		on.save();
+		on.clipRect(squaresRegion);
+		
 		for (SquareShape square : squares){
 			square.draw(on, zoom);
 		}
+		
+		on.restore();
 	}
 	
 	/**
@@ -410,6 +447,12 @@ public class Points {
 	{
 		for (SquareShape square : squares)
 			square.invalidate();
+	}
+	
+	public void setOffset(float x, float y)
+	{
+		offset.x = x;
+		offset.y = y;
 	}
 	
 	public int getColor(String color){

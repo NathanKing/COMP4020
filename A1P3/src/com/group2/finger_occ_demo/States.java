@@ -16,7 +16,7 @@ class States
 	}
 	
 	public static final int SWIPE_DISTANCE =   10;	// How many pixels do we have to move to initiate a move
-	public static final int HOVER_TIMEOUT  =  700;	// How many milliseconds before detecting hover
+	public static final int HOVER_TIMEOUT  = 1000;	// How many milliseconds before detecting hover
 	public static final int SELECT_TIMEOUT = 2000;	// How long without moving before item should be selected
 	public static final int SELECT_MOVE    =   10;  // How many pixels does it take to reset the select timeout
 	
@@ -102,6 +102,9 @@ class States
 				
 				oldDistance = one.distance(two);
 				
+				// Track how far the finger moved and apply it to our canvas offset
+				screen_offset.translate(old.x - one.x, old.y - one.y);
+				
 				break;
 				
 			// One finger. Just moving
@@ -124,8 +127,6 @@ class States
 				break;
 		}
 		
-		Log.w("State", fs.toString() + " start:" + stateStart + " time:" + System.currentTimeMillis());
-		Log.w("Values", "Zoom: " + Double.toString(zoom) + " Offset: " + screen_offset.toString());
 		
 		oldTimestamp = timestamp;
 		old = one;
@@ -133,6 +134,9 @@ class States
 		// Guarantee some sort of lower threshold
 		if (zoom < 0.1)
 			zoom = 0.1;
+		
+		if (zoom > 10)
+			zoom = 10;		
 		
 		return fs;
 	}

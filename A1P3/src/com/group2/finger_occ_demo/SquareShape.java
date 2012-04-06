@@ -26,11 +26,12 @@ public class SquareShape {
 	private Rect shape = new Rect();
 	private Rect border = new Rect();
 	
-	static private Rect drawBoarder;	// Where to draw the movies on the screen
+	static private Rect		drawBoarder;	// Where to draw the movies on the screen
+	static private Point2D	offset = new Point2D(0,0);
 	
 	// constants
 	final private int BORDER = 2;//in pixels
-	final private double resizeF = 0.05;//Constant to resize by {2 for device}
+	final private double resizeF = 0.07;//Constant to resize by {2 for device}
 
 	static final int WIDTH = 20;
 	static final int HEIGHT = 20;
@@ -84,7 +85,7 @@ public class SquareShape {
 			shape.left   = tempX - middle;
 			shape.right  = tempX + middle;
 			
-			shape.offset(drawBoarder.left, drawBoarder.top);	// Offset starting position
+			shape.offset(drawBoarder.left + (int)offset.x, drawBoarder.top + (int)offset.y);	// Offset starting position
 			
 			border.set(shape);
 			border.top    += BORDER;
@@ -103,7 +104,7 @@ public class SquareShape {
 			// Decide on when to display extra data
 			if (resizeBy > TEXT_APPEAR)
 				on.drawText(movie.getTitle(), border.left + 3, border.top + 10, borderColor);			
-		}		
+		}
 	}
 	
 	/**
@@ -222,6 +223,12 @@ public class SquareShape {
 		return drawBoarder;
 	}
 
+	public static void setOffset(float x, float y)
+	{
+		SquareShape.offset.x = x;
+		SquareShape.offset.y = y;
+	}
+	
 	public static void setDrawBoarder(Rect drawBoarder) {
 		SquareShape.drawBoarder = drawBoarder;
 	}

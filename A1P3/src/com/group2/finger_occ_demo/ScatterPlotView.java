@@ -43,9 +43,8 @@ public class ScatterPlotView {
 	 * Whenever the canvas is redrawn, these objects are drawn.
 	 */
 	public void onDraw(Canvas canvas) {
-		//shapes can obscure lines and graph background, so this is why graph is first.
-		points.drawGraph(canvas, zoom);
 		points.drawShapes(canvas, zoom);
+		points.drawGraph(canvas, zoom);
 	}
 	
 	/**
@@ -105,5 +104,11 @@ public class ScatterPlotView {
 	public void setZoom(float zoom)
 	{
 		this.zoom = zoom;
+	}
+	
+	public void setOffset(float x, float y)
+	{
+		SquareShape.setOffset(x, y);
+		points.setOffset(x, y);
 	}
 }

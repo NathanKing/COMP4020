@@ -77,7 +77,7 @@ public class MyCanvas extends View implements OnTouchListener, OnDragListener
 	    		scatterView.invalidate();
 	    		view.invalidate();
 	    		break;
-	    		
+	    	
 	    	case RESIZE:
 	        	zoom = (float)States.zoom;
 	        	
@@ -89,6 +89,17 @@ public class MyCanvas extends View implements OnTouchListener, OnDragListener
 	    		scatterView.invalidate();
 	    		view.invalidate();
 	    		break;
+    	}
+    	
+    	// Handle swiping
+    	switch (state)
+    	{
+    		case RESIZE:
+    		case SWIPE:
+    			scatterView.setOffset(States.screen_offset.x, States.screen_offset.y);
+    			scatterView.invalidate();
+    			view.invalidate();
+    			break;
     	}
     	
     	// Open the Movie View Display
