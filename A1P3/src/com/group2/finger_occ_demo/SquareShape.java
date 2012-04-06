@@ -1,5 +1,8 @@
 package com.group2.finger_occ_demo;
 
+import java.util.Collection;
+import java.util.LinkedList;
+
 import com.group2.finger_occ_demo.data.Movie;
 
 import android.graphics.Canvas;
@@ -12,7 +15,7 @@ import android.graphics.Rect;
  * in radius * 0.5 * 1 * current size.
  */
 public class SquareShape {
-	public Movie movie;
+	public LinkedList<Movie> movie = new LinkedList<Movie>();
 	private int xDefault;
 	private int yDefault;
 	private int x;
@@ -42,7 +45,7 @@ public class SquareShape {
 	final private double TEXT_APPEAR = 1.9;//times
 	
 	public SquareShape(Movie movie, int x, int y, int colorNum) {
-		this.movie  = movie;
+		this.movie.add(movie);
 		
 		this.x = x;
 		this.y = y;
@@ -64,6 +67,8 @@ public class SquareShape {
 	 */
 	public void draw(Canvas on, float zoom)
 	{
+		Movie topMovie = movie.getFirst();
+		
 		if (stale)
 		{
 			int middle = WIDTH / 2;	// For now, we're using squares. Expand if using rectangles
@@ -103,7 +108,7 @@ public class SquareShape {
 
 			// Decide on when to display extra data
 			if (resizeBy > TEXT_APPEAR)
-				on.drawText(movie.getTitle(), border.left + 3, border.top + 10, borderColor);			
+				on.drawText(topMovie.getTitle(), border.left + 3, border.top + 10, borderColor);			
 		}
 	}
 	
@@ -211,12 +216,12 @@ public class SquareShape {
 		resizeBy = 0;
 	}
 	
-	public Movie getMovie() {
+	public Collection<Movie> getMovies() {
 		return movie;
 	}
 
-	public void setMovie(Movie movie) {
-		this.movie = movie;
+	public void addMovie(Movie movie) {
+		this.movie.add(movie);
 	}
 
 	public static Rect getDrawBoarder() {

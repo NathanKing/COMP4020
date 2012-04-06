@@ -192,13 +192,12 @@ public class Points {
 				square.getY() == y)
 			{
 				found = true;
+				square.addMovie(toUse);
 				break;
 			}
 		}
 		
-		// Add to movie list held in a square
-		if (found) {}
-		else
+		if (!found)
 		{
 			// Create initial square
 			squares.add(new SquareShape(toUse, x, y, color));
@@ -394,7 +393,7 @@ public class Points {
 				square = squares.get(i);
 				if (square.inShape(position) == true){
 					System.out.println("in shape");
-					movies.add(square.getMovie());
+					movies.addAll(square.getMovies());
 				}
 				
 				// Give up on anything smaller than what's selected
@@ -403,7 +402,7 @@ public class Points {
 			}
 		}
 		else
-			movies.add(squares.get(0).getMovie());
+			movies.addAll(squares.get(0).getMovies());
 		
 		return movies;
 	}
